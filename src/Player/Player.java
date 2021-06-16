@@ -35,7 +35,7 @@ public class Player implements Runnable {
     @Override
     public void run() {
         try {
-            writer.writeUTF("\n\n\nWelcome to the Mafia game *_*\n\n\nPlease enter a username for yourself ...");
+            writer.writeUTF("\nWelcome to the Mafia game *_*\n\n\nPlease enter a username for yourself ...");
             while (true) {
                 String chosenName = reader.readUTF();
                 if (!game.getInitializer().getNames().contains(chosenName) && !chosenName.isBlank()) {

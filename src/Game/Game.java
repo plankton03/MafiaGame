@@ -44,8 +44,6 @@ public class Game {
         ChatPhaseController chatPhaseController = new ChatPhaseController(this);
 
         chatPhaseController.startChat();
-
-
     }
 
     public LinkedList<Player> getPlayers() {

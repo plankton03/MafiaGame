@@ -42,9 +42,6 @@ public class ChatPhaseHandler extends Thread{
         }
     }
 
-    public void sendMessage(String message) throws IOException {
-        thePlayer.getWriter().writeUTF(message);
-    }
 
     public void setExitChat(boolean exitChat) {
         this.exitChat = exitChat;

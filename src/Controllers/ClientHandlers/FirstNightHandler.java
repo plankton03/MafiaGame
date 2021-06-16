@@ -44,7 +44,7 @@ public class FirstNightHandler extends Thread {
             if (player.equals(thePlayer))
                 continue;
             if (player.getRole().isMafia()) {
-                message += "# " + player.getName() + " : " + player.getRole().getRole() + " \n";
+                message += "* " + player.getName() + " : " + player.getRole().getRole() + " \n";
             }
         }
 

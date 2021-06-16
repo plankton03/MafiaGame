@@ -1,7 +1,6 @@
 package Controllers.PhaseControllers;
 
 import Controllers.ClientHandlers.ChatPhaseHandler;
-import Controllers.ClientHandlers.SenderOfTheMessage;
 import Game.Game;
 import Player.Player;
 
@@ -15,7 +14,7 @@ public class ChatPhaseController {
     private LinkedList<Player> deadPlayers;
     private boolean chatIsOver = false;
     private LinkedList<ChatPhaseHandler> chatPhaseHandlers;
-    private final long chatTime = 100 * 1000;
+    private final long chatTime = 20 * 1000;
 
     public ChatPhaseController(Game game) {
         this.game = game;
@@ -25,48 +24,52 @@ public class ChatPhaseController {
     }
 
     public void startChat() {
-
-
         try {
-            sendMessageToAll("The day begins :)\n\nChat starts ...\n");
+            sendMessageToAll("\n......................................" +
+                    "\nThe day begins :)\n\nChat starts ...\n");
+            for (Player player : players) {
+                ChatPhaseHandler chatPhaseHandler = new ChatPhaseHandler(this,player);
+                chatPhaseHandlers.add(chatPhaseHandler);
+                chatPhaseHandler.start();
+            }
+
+            long start = System.currentTimeMillis();
+            long end = start + chatTime;
+            while (System.currentTimeMillis() < end) {
+                if (allAreReadyToExitChat()){
+                    sendMessageToAll("\n\nAll users announced their readiness to start voting. You can no longer chat.");
+                    return;
+                }
+            }
+            forceFinishChat();
+            sendMessageToAll("\n\nThe time allotted for the chat has expired. You can no longer chat with other users.");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        for (Player player : players) {
-            (new ChatPhaseHandler(this, player)).start();
-        }
-
-        long start = System.currentTimeMillis();
-        long end = start + chatTime;
-        while (System.currentTimeMillis() < end) {
-            if (allAreReadyToExitChat())
-                return;
-        }
-        forceFinishChat();
     }
 
     public void sendMessageToAll(String message) throws IOException {
-        for (ChatPhaseHandler chatPhaseHandler : chatPhaseHandlers) {
-            (new SenderOfTheMessage(chatPhaseHandler.getThePlayer(), message)).start();
+        for (Player player : players) {
+           player.getWriter().writeUTF(message);
         }
         for (Player player : deadPlayers) {
-            (new SenderOfTheMessage(player, message)).start();
+            player.getWriter().writeUTF(message);
         }
     }
 
     public void sendMessageToAll(String msg, ChatPhaseHandler thePlayer) throws IOException {
         String message = new String();
         for (ChatPhaseHandler player : chatPhaseHandlers) {
-            if (player.equals(thePlayer))
-                message = "You : " + msg;
-            else
-                message = thePlayer.getThePlayer().getName() + " : " + msg;
-            (new SenderOfTheMessage(thePlayer.getThePlayer(), message)).start();
+            if (player.equals(thePlayer)){
+                player.getThePlayer().getWriter().writeUTF("You : "+msg);
+                continue;
+            }
+            message = player.getThePlayer().getName()+" : "+msg;
+            player.getThePlayer().getWriter().writeUTF(message);
         }
         for (Player player : deadPlayers) {
-            (new SenderOfTheMessage(player, message)).start();
+            message = player.getName()+" : "+msg;
+            player.getWriter().writeUTF(message);
         }
     }
 

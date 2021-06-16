@@ -45,6 +45,7 @@ public class Client implements Runnable {
 //        System.out.println("please enter the port :");
 //        port = scanner.nextLine();
         socket = new Socket(ipAddress, Integer.parseInt(port));
+        System.out.println("\n\nYou are connected to the game server :)");
         reader = new DataInputStream(socket.getInputStream());
         writer = new DataOutputStream(socket.getOutputStream());
 
@@ -69,7 +70,7 @@ public class Client implements Runnable {
             }
             if (rec.equals("Exit")) {
                 exit = true;
-                System.out.println("write any text you want , or click enter to exit the game :)");
+                System.out.println("\n\nwrite any text you want , or click enter to exit the game :)");
                 break;
             }
             System.out.println(rec);

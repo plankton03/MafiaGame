@@ -30,7 +30,16 @@ public class Server {
             game.startFirstNight();
             System.out.println("\nThe first night is over.");
 
+            try {
+                Thread.sleep(5*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+            System.out.println("\nStarting day and chat phase.");
             game.startDay();
+            System.out.println("\nChat phase is over.");
 
 
 
