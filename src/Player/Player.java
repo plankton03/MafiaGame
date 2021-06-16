@@ -24,7 +24,7 @@ public class Player implements Runnable {
     public Player(Socket socket, Game game) {
         this.socket = socket;
         this.game = game;
-        isAlive = true;
+        isAlive = false;
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(),true);
@@ -55,6 +55,8 @@ public class Player implements Runnable {
         }
 
         writer.println("Your role in the game : " + role.getRole());
+
+        isAlive = true;
     }
 
     public boolean exist(String name) {

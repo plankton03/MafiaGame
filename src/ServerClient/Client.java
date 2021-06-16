@@ -11,11 +11,14 @@ public class Client implements Runnable {
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private Scanner scanner;
+    private boolean exit = false;
 
 
     public static void main(String[] args) throws IOException {
         Client client = new Client();
         client.doSome();
+
 
     }
 
@@ -25,6 +28,11 @@ public class Client implements Runnable {
             new Thread(this).start();
 
             startMessaging();
+
+            reader.close();
+            writer.close();
+            socket.close();
+            System.exit(0);
         } catch (IOException ioException) {
             System.out.println("Could not connect to the server :(((");
             ioException.printStackTrace();
@@ -42,6 +50,7 @@ public class Client implements Runnable {
         socket = new Socket(ipAddress, Integer.parseInt(port));
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writer = new PrintWriter(socket.getOutputStream(), true);
+
     }
 
 
@@ -61,6 +70,11 @@ public class Client implements Runnable {
             if (rec == null) {
                 continue;
             }
+            if (rec.equals("Exit")) {
+                exit = true;
+                System.out.println("write any text you want to exiting game :)");
+                break;
+            }
             System.out.println(rec);
         }
     }
@@ -69,6 +83,8 @@ public class Client implements Runnable {
         String message;
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            if (exit)
+                break;
             message = scanner.nextLine();
             if (message != null) {
                 writer.println(message);

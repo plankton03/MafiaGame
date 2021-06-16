@@ -24,7 +24,9 @@ public class Server {
             int numOfPlayers = getNumOfPlayers();
             Game game = new Game(serverSocket, numOfPlayers);
 
+            System.out.println("Starting first night ... ");
             game.startFirstNight();
+            game.sendToAll("Exit");
 
 
         } catch (IOException e) {

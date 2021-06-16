@@ -19,19 +19,16 @@ public class FirstNightHandler extends Thread {
 
         String message = prepareMessage();
 
-        if (message == null)
-            return;
-//            thePlayer.getWriter().println("hi");
-
         thePlayer.getWriter().println(message);
     }
 
     private String prepareMessage(){
         if (thePlayer.getRole().isMafia())
             return prepareMafiaMessage();
-        else if (thePlayer.getRole().getClass().equals("Mayor"))
+        else if (thePlayer.getRole().getRole().equals("Mayor"))
             return prepareMayorMessage();
-        else return null;
+        else
+            return "The game introduction night is underway :)";
     }
 
     private String prepareMafiaMessage(){
@@ -44,14 +41,17 @@ public class FirstNightHandler extends Thread {
                 message += "# "+player.getName() + " : "+player.getRole().getRole()+" \n";
             }
         }
+
+        if (message.equals("The list of Mafia members is as follows :\n"))
+            message = "There is no any mafia in the city :(";
         return message;
     }
 
     private String prepareMayorMessage(){
         for (Player player : players){
-            if (player.getRole().getClass().equals("DrCity"))
+            if (player.getRole().getRole().equals("City Doctor"))
                 return "# "+ player.getName()+" : City Doctor \n";
         }
-        return null;
+        return "There is no any doctor in the city ";
     }
 }

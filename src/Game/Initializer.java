@@ -42,6 +42,7 @@ public class Initializer {
         }
         updateGameState(players);
 
+        System.out.println("Game preparation is complete");
     }
 
 
@@ -106,11 +107,13 @@ public class Initializer {
         game.setPlayers(players);
     }
 
-    private boolean initializedOver(LinkedList<Player> players){
-        for (Player player : players){
-            if (! player.isAlive())
-                return false;
+    private boolean initializedOver(LinkedList<Player> players) {
+        synchronized (players) {
+            for (Player player : players) {
+                if (!player.isAlive())
+                    return false;
+            }
+            return true;
         }
-        return true;
     }
 }

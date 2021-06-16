@@ -28,6 +28,12 @@ public class Game {
         }
     }
 
+    public void sendToAll(String message){
+        for (Player player: players){
+            player.getWriter().println(message);
+        }
+    }
+
     public void startFirstNight(){
         FirstNightController firstNightController = new FirstNightController(this);
 
