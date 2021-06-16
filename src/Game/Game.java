@@ -13,6 +13,7 @@ public class Game {
     private LinkedList<Player> deadPlayers;
     private ServerSocket serverSocket;
     private int numOFPlayers;
+    private Initializer initializer;
 
     public Game(ServerSocket serverSocket, int numOFPlayers) {
         this.serverSocket = serverSocket;
@@ -20,7 +21,7 @@ public class Game {
         players = new LinkedList<Player>();
         deadPlayers = new LinkedList<Player>();
 
-        Initializer initializer= new Initializer(serverSocket,numOFPlayers,this);
+        initializer = new Initializer(serverSocket, numOFPlayers, this);
         try {
             initializer.initialize();
         } catch (IOException e) {
@@ -28,13 +29,13 @@ public class Game {
         }
     }
 
-    public void sendToAll(String message){
-        for (Player player: players){
-            player.getWriter().println(message);
+    public void sendToAll(String message) throws IOException {
+        for (Player player : players) {
+            player.getWriter().writeUTF(message);
         }
     }
 
-    public void startFirstNight(){
+    public void startFirstNight() {
         FirstNightController firstNightController = new FirstNightController(this);
 
         firstNightController.startFirstNight();
@@ -47,5 +48,9 @@ public class Game {
 
     public void setPlayers(LinkedList<Player> players) {
         this.players = players;
+    }
+
+    public Initializer getInitializer() {
+        return initializer;
     }
 }

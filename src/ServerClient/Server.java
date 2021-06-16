@@ -39,11 +39,11 @@ public class Server {
     public static int getNumOfPlayers() {
         System.out.println("Consider the following to connect to the server\n");
 //        System.out.println("IP Address : "+ "84.47.251.185");
-        System.out.println("port : "+ 8000);
+        System.out.println("port : " + 8000);
         System.out.println("Please enter the number of the players ...\n(Preferred more than 8)");
         Scanner scanner = new Scanner(System.in);
         int nop = scanner.nextInt();
-        System.out.println("Mafia game will create based on "+ nop + " players :)");
+        System.out.println("Mafia game will create based on " + nop + " players :)");
         return nop;
     }
 

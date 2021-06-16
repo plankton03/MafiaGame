@@ -13,8 +13,8 @@ public class Player implements Runnable {
     private String name;
     private Role role;
     private Socket socket;
-    private BufferedReader reader;
-    private PrintWriter writer;
+    private DataInputStream reader;
+    private DataOutputStream writer;
 
     //TODO : in run:
     // 1. get name
@@ -26,8 +26,8 @@ public class Player implements Runnable {
         this.game = game;
         isAlive = false;
         try {
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(socket.getOutputStream(),true);
+            reader = new DataInputStream(socket.getInputStream());
+            writer = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,27 +39,27 @@ public class Player implements Runnable {
 
     @Override
     public void run() {
-        writer.println("Welcome to the Mafia game *_*\nPlease enter a username for yourself ...");
-
-        while (true) {
-            try {
-                String chosenName = reader.readLine();
-                if (!exist(chosenName)) {
-                    setName(chosenName);
+        try {
+            writer.writeUTF("\n\n\nWelcome to the Mafia game *_*\n\n\nPlease enter a username for yourself ...");
+            while (true) {
+                String chosenName = reader.readUTF();
+                if (!game.getInitializer().getNames().contains(chosenName) && !chosenName.isBlank()) {
+                    game.getInitializer().addNewName(chosenName);
+                    name = chosenName;
                     break;
                 } else
-                    writer.println("This username has already been used. Please choose another username.");
-            } catch (IOException e) {
-                e.printStackTrace();
+                    writer.writeUTF("\nThis username has already been used or is not valid :(\nPlease choose another username.");
             }
-        }
+            writer.writeUTF("Your role in the game : " + role.getRole());
 
-        writer.println("Your role in the game : " + role.getRole());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
 
         isAlive = true;
     }
 
-    public boolean exist(String name) {
+    public boolean exists(String name) {
         LinkedList<Player> players = game.getPlayers();
         synchronized (players) {
             for (Player player : players) {
@@ -111,19 +111,19 @@ public class Player implements Runnable {
         this.socket = socket;
     }
 
-    public BufferedReader getReader() {
+    public DataInputStream getReader() {
         return reader;
     }
 
-    public void setReader(BufferedReader reader) {
+    public void setReader(DataInputStream reader) {
         this.reader = reader;
     }
 
-    public PrintWriter getWriter() {
+    public DataOutputStream getWriter() {
         return writer;
     }
 
-    public void setWriter(PrintWriter writer) {
+    public void setWriter(DataOutputStream writer) {
         this.writer = writer;
     }
 }

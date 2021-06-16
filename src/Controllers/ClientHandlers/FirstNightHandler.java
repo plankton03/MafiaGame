@@ -2,6 +2,7 @@ package Controllers.ClientHandlers;
 
 import Player.Player;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class FirstNightHandler extends Thread {
@@ -19,10 +20,15 @@ public class FirstNightHandler extends Thread {
 
         String message = prepareMessage();
 
-        thePlayer.getWriter().println(message);
+        try {
+            thePlayer.getWriter().writeUTF(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    private String prepareMessage(){
+    private String prepareMessage() {
         if (thePlayer.getRole().isMafia())
             return prepareMafiaMessage();
         else if (thePlayer.getRole().getRole().equals("Mayor"))
@@ -31,14 +37,14 @@ public class FirstNightHandler extends Thread {
             return "The game introduction night is underway :)";
     }
 
-    private String prepareMafiaMessage(){
+    private String prepareMafiaMessage() {
         String message = "The list of Mafia members is as follows :\n";
 
-        for (Player player : players){
+        for (Player player : players) {
             if (player.equals(thePlayer))
                 continue;
-            if (player.getRole().isMafia()){
-                message += "# "+player.getName() + " : "+player.getRole().getRole()+" \n";
+            if (player.getRole().isMafia()) {
+                message += "# " + player.getName() + " : " + player.getRole().getRole() + " \n";
             }
         }
 
@@ -47,10 +53,10 @@ public class FirstNightHandler extends Thread {
         return message;
     }
 
-    private String prepareMayorMessage(){
-        for (Player player : players){
+    private String prepareMayorMessage() {
+        for (Player player : players) {
             if (player.getRole().getRole().equals("City Doctor"))
-                return "# "+ player.getName()+" : City Doctor \n";
+                return "# " + player.getName() + " : City Doctor \n";
         }
         return "There is no any doctor in the city ";
     }

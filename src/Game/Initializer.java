@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Vector;
 
 public class Initializer {
     private ServerSocket serverSocket;
     private int numOfPlayers;
     private Game game;
+    private Vector<String> names = new Vector<>();
 
 
     //TODO : create roles
@@ -36,7 +38,7 @@ public class Initializer {
 
         runPlayers(players);
 
-        while (true){
+        while (true) {
             if (initializedOver(players))
                 break;
         }
@@ -86,9 +88,17 @@ public class Initializer {
         LinkedList<Player> players = new LinkedList<Player>();
         for (int i = 1; i <= numOfPlayers; i++) {
             players.add(new Player(serverSocket.accept(), game));
-            System.out.println("Player "+ i + " connected ");
+            System.out.println("Player " + i + " connected ");
         }
         return players;
+    }
+
+    public void addNewName(String name) {
+        names.add(name);
+    }
+
+    public Vector<String> getNames() {
+        return names;
     }
 
     public void matchPlayerRole(LinkedList<Player> players, LinkedList<Role> roles) {
