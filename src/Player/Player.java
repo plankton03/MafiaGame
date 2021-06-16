@@ -54,12 +54,9 @@ public class Player implements Runnable {
         isAlive = true;
     }
 
-
-
     public void setRole(Role role) {
         this.role = role;
     }
-
 
     public Role getRole() {
         return role;
@@ -73,11 +70,9 @@ public class Player implements Runnable {
         return name;
     }
 
-
     public DataOutputStream getWriter() {
         return writer;
     }
-
 
     public void setName(String name) {
         synchronized (game) {
@@ -93,13 +88,9 @@ public class Player implements Runnable {
         this.game = game;
     }
 
-
-
     public void setAlive(boolean alive) {
         isAlive = alive;
     }
-
-
 
     public Socket getSocket() {
         return socket;
@@ -116,7 +107,6 @@ public class Player implements Runnable {
     public void setReader(DataInputStream reader) {
         this.reader = reader;
     }
-
 
     public void setWriter(DataOutputStream writer) {
         this.writer = writer;

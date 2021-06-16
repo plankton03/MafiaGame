@@ -15,15 +15,13 @@ public class Client implements Runnable {
     public static void main(String[] args) throws IOException {
         Client client = new Client();
         client.doSome();
-
-
     }
 
     public void doSome() {
         try {
             create();
-            new Thread(this).start();
 
+            new Thread(this).start();
             startMessaging();
 
             reader.close();
@@ -89,8 +87,6 @@ public class Client implements Runnable {
             }
         }
     }
-
-
 }
 
 

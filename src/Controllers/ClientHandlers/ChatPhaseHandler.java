@@ -5,7 +5,7 @@ import Player.Player;
 
 import java.io.IOException;
 
-public class ChatPhaseHandler extends Thread{
+public class ChatPhaseHandler extends Thread {
 
     private ChatPhaseController controller;
     private Player thePlayer;
@@ -24,16 +24,16 @@ public class ChatPhaseHandler extends Thread{
 
     public void startListening() {
         String rcv = new String();
-        while (true){
+        while (true) {
             try {
                 rcv = thePlayer.getReader().readUTF();
                 if (rcv.isBlank())
                     continue;
-                else if (rcv.equals("$")){
+                else if (rcv.equals("$")) {
                     isReadyToEndChat = true;
                     rcv = "I'm ready to vote";
                 }
-                controller.sendMessageToAll(rcv,this);
+                controller.sendMessageToAll(rcv, this);
                 if (exitChat)
                     break;
             } catch (IOException e) {

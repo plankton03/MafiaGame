@@ -56,7 +56,7 @@ public class FirstNightHandler extends Thread {
     private String prepareMayorMessage() {
         for (Player player : players) {
             if (player.getRole().getRole().equals("City Doctor"))
-                return "# " + player.getName() + " : City Doctor \n";
+                return "* " + player.getName() + " : City Doctor \n";
         }
         return "There is no any doctor in the city ";
     }

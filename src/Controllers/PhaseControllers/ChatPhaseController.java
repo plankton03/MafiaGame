@@ -28,7 +28,7 @@ public class ChatPhaseController {
             sendMessageToAll("\n......................................" +
                     "\nThe day begins :)\n\nChat starts ...\n");
             for (Player player : players) {
-                ChatPhaseHandler chatPhaseHandler = new ChatPhaseHandler(this,player);
+                ChatPhaseHandler chatPhaseHandler = new ChatPhaseHandler(this, player);
                 chatPhaseHandlers.add(chatPhaseHandler);
                 chatPhaseHandler.start();
             }
@@ -36,7 +36,7 @@ public class ChatPhaseController {
             long start = System.currentTimeMillis();
             long end = start + chatTime;
             while (System.currentTimeMillis() < end) {
-                if (allAreReadyToExitChat()){
+                if (allAreReadyToExitChat()) {
                     sendMessageToAll("\n\nAll users announced their readiness to start voting. You can no longer chat.");
                     return;
                 }
@@ -50,7 +50,7 @@ public class ChatPhaseController {
 
     public void sendMessageToAll(String message) throws IOException {
         for (Player player : players) {
-           player.getWriter().writeUTF(message);
+            player.getWriter().writeUTF(message);
         }
         for (Player player : deadPlayers) {
             player.getWriter().writeUTF(message);
@@ -60,15 +60,15 @@ public class ChatPhaseController {
     public void sendMessageToAll(String msg, ChatPhaseHandler thePlayer) throws IOException {
         String message = new String();
         for (ChatPhaseHandler player : chatPhaseHandlers) {
-            if (player.equals(thePlayer)){
-                player.getThePlayer().getWriter().writeUTF("You : "+msg);
+            if (player.equals(thePlayer)) {
+                player.getThePlayer().getWriter().writeUTF("You : " + msg);
                 continue;
             }
-            message = player.getThePlayer().getName()+" : "+msg;
+            message = thePlayer.getThePlayer().getName() + " : " + msg;
             player.getThePlayer().getWriter().writeUTF(message);
         }
         for (Player player : deadPlayers) {
-            message = player.getName()+" : "+msg;
+            message = thePlayer.getThePlayer().getName() + " : " + msg;
             player.getWriter().writeUTF(message);
         }
     }

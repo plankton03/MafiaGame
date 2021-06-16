@@ -31,7 +31,6 @@ public class Game {
     }
 
 
-
     public void startFirstNight() {
         FirstNightController firstNightController = new FirstNightController(this);
 
@@ -39,7 +38,7 @@ public class Game {
 
     }
 
-    public void startDay(){
+    public void startDay() {
 
         ChatPhaseController chatPhaseController = new ChatPhaseController(this);
 
