@@ -44,7 +44,7 @@ public class Initializer {
         }
         updateGameState(players);
 
-        System.out.println("Game preparation is complete");
+        System.out.println("\nGame preparation is complete.\n");
     }
 
 

@@ -5,7 +5,6 @@ import Roles.Role;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.LinkedList;
 
 public class Player implements Runnable {
     private Game game;
@@ -33,10 +32,6 @@ public class Player implements Runnable {
         }
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     @Override
     public void run() {
         try {
@@ -59,28 +54,35 @@ public class Player implements Runnable {
         isAlive = true;
     }
 
-    public boolean exists(String name) {
-        LinkedList<Player> players = game.getPlayers();
-        synchronized (players) {
-            for (Player player : players) {
-                if (player.getName() == null)
-                    continue;
-                if (player.getName().equals(name)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+
+
+    public void setRole(Role role) {
+        this.role = role;
     }
+
+
+    public Role getRole() {
+        return role;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public DataOutputStream getWriter() {
+        return writer;
+    }
+
 
     public void setName(String name) {
         synchronized (game) {
             this.name = name;
         }
-    }
-
-    public Role getRole() {
-        return role;
     }
 
     public Game getGame() {
@@ -91,17 +93,13 @@ public class Player implements Runnable {
         this.game = game;
     }
 
-    public boolean isAlive() {
-        return isAlive;
-    }
+
 
     public void setAlive(boolean alive) {
         isAlive = alive;
     }
 
-    public String getName() {
-        return name;
-    }
+
 
     public Socket getSocket() {
         return socket;
@@ -119,9 +117,6 @@ public class Player implements Runnable {
         this.reader = reader;
     }
 
-    public DataOutputStream getWriter() {
-        return writer;
-    }
 
     public void setWriter(DataOutputStream writer) {
         this.writer = writer;

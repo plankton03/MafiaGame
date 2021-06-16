@@ -38,7 +38,7 @@ public class Client implements Runnable {
 
 
     private void create() throws IOException {
-        String ipAddress = "127.0.0.1", port = "8000";
+        String ipAddress = "127.0.0.1", port = "7000";
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.println("please enter the ip address :");
 //        ipAddress = scanner.nextLine();
@@ -88,6 +88,8 @@ public class Client implements Runnable {
             }
         }
     }
+
+
 }
 
 

@@ -1,5 +1,6 @@
 package Game;
 
+import Controllers.PhaseControllers.ChatPhaseController;
 import Controllers.PhaseControllers.FirstNightController;
 import Player.Player;
 
@@ -29,16 +30,21 @@ public class Game {
         }
     }
 
-    public void sendToAll(String message) throws IOException {
-        for (Player player : players) {
-            player.getWriter().writeUTF(message);
-        }
-    }
+
 
     public void startFirstNight() {
         FirstNightController firstNightController = new FirstNightController(this);
 
         firstNightController.startFirstNight();
+
+    }
+
+    public void startDay(){
+
+        ChatPhaseController chatPhaseController = new ChatPhaseController(this);
+
+        chatPhaseController.startChat();
+
 
     }
 
@@ -52,5 +58,15 @@ public class Game {
 
     public Initializer getInitializer() {
         return initializer;
+    }
+
+    public LinkedList<Player> getDeadPlayers() {
+        return deadPlayers;
+    }
+
+    public void sendToAll(String message) throws IOException {
+        for (Player player : players) {
+            player.getWriter().writeUTF(message);
+        }
     }
 }
