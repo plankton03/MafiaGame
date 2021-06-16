@@ -21,6 +21,7 @@ public class FirstNightHandler extends Thread {
 
         if (message == null)
             return;
+//            thePlayer.getWriter().println("hi");
 
         thePlayer.getWriter().println(message);
     }
@@ -40,7 +41,7 @@ public class FirstNightHandler extends Thread {
             if (player.equals(thePlayer))
                 continue;
             if (player.getRole().isMafia()){
-                message += "# "+player.getName() + " : "+player.getRole().getClass()+" \n";
+                message += "# "+player.getName() + " : "+player.getRole().getRole()+" \n";
             }
         }
         return message;

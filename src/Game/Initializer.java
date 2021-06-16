@@ -36,6 +36,10 @@ public class Initializer {
 
         runPlayers(players);
 
+        while (true){
+            if (initializedOver(players))
+                break;
+        }
         updateGameState(players);
 
     }
@@ -87,7 +91,7 @@ public class Initializer {
     }
 
     public void matchPlayerRole(LinkedList<Player> players, LinkedList<Role> roles) {
-        for (int i = 0; i <= numOfPlayers; i++) {
+        for (int i = 0; i < numOfPlayers; i++) {
             players.get(i).setRole(roles.get(i));
         }
     }
@@ -100,5 +104,13 @@ public class Initializer {
 
     public void updateGameState(LinkedList<Player> players) {
         game.setPlayers(players);
+    }
+
+    private boolean initializedOver(LinkedList<Player> players){
+        for (Player player : players){
+            if (! player.isAlive())
+                return false;
+        }
+        return true;
     }
 }

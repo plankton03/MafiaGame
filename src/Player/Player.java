@@ -5,6 +5,7 @@ import Roles.Role;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.LinkedList;
 
 public class Player implements Runnable {
     private Game game;
@@ -53,13 +54,16 @@ public class Player implements Runnable {
             }
         }
 
-        writer.println("Your role in the game : " + role.getClass());
+        writer.println("Your role in the game : " + role.getRole());
     }
 
     public boolean exist(String name) {
-        synchronized (game) {
-            for (Player player : game.getPlayers()) {
-                if (player.name.equals(name)) {
+        LinkedList<Player> players = game.getPlayers();
+        synchronized (players) {
+            for (Player player : players) {
+                if (player.getName() == null)
+                    continue;
+                if (player.getName().equals(name)) {
                     return true;
                 }
             }

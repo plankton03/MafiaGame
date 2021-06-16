@@ -2,6 +2,10 @@ package Roles;
 
 public class DrCity extends MainRoles{
 
+    public DrCity() {
+        super("City Doctor");
+    }
+
     @Override
     public String nightQuestion() {
         return null;
@@ -11,4 +15,6 @@ public class DrCity extends MainRoles{
     public boolean isMafia() {
         return false;
     }
+
+
 }
