@@ -5,7 +5,6 @@ import Roles.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -81,7 +80,8 @@ public class Initializer {
 
         LinkedList<Player> players = new LinkedList<Player>();
         for (int i = 1; i <= numOfPlayers; i++) {
-            players.add(new Player(serverSocket.accept(),game));
+            players.add(new Player(serverSocket.accept(), game));
+            System.out.println("Player "+ i + " connected ");
         }
         return players;
     }
@@ -92,13 +92,13 @@ public class Initializer {
         }
     }
 
-    public void runPlayers(LinkedList<Player> players ){
-        for (Player player : players){
+    public void runPlayers(LinkedList<Player> players) {
+        for (Player player : players) {
             new Thread(player).start();
         }
     }
 
-    public void updateGameState(LinkedList<Player> players){
+    public void updateGameState(LinkedList<Player> players) {
         game.setPlayers(players);
     }
 }

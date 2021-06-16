@@ -1,12 +1,40 @@
 package Game;
 
+import Controllers.PhaseControllers.FirstNightController;
 import Player.Player;
+import Roles.Server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.LinkedList;
 
 public class Game {
 
-    LinkedList<Player> players;
+    private LinkedList<Player> players;
+    private LinkedList<Player> deadPlayers;
+    private ServerSocket serverSocket;
+    private int numOFPlayers;
+
+    public Game(ServerSocket serverSocket, int numOFPlayers) {
+        this.serverSocket = serverSocket;
+        this.numOFPlayers = numOFPlayers;
+        players = new LinkedList<Player>();
+        deadPlayers = new LinkedList<Player>();
+
+        Initializer initializer= new Initializer(serverSocket,numOFPlayers,this);
+        try {
+            initializer.initialize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startFirstNight(){
+        FirstNightController firstNightController = new FirstNightController(this);
+
+        firstNightController.startFirstNight();
+
+    }
 
     public LinkedList<Player> getPlayers() {
         return players;
