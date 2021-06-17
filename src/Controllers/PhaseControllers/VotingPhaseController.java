@@ -5,6 +5,8 @@ import Controllers.ClientHandlers.ExitHandler;
 import Controllers.ClientHandlers.VotingPhaseHandler;
 import Game.Game;
 import Player.Player;
+import Roles.MainRoles;
+import Roles.Mayor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,17 +81,11 @@ public class VotingPhaseController {
 
     public boolean askMayor() {
         for (Player player : players) {
-            if (player.getRole().getRole().equals("Mayor")) {
-                try {
-                    player.getWriter().writeUTF("Do you want to cancel the vote?\n1. Yes\n2. No");
-                    int answer = player.getRole().act();
+            if (player.getRole() instanceof Mayor) {
+                    int answer = ((Mayor) player.getRole()).act(player);
                     if (answer == 1)
                         return true;
                     else return false;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
             }
         }
         return false;
@@ -167,22 +163,7 @@ public class VotingPhaseController {
 
     }
 
-    public boolean isValidAnswer(int answer) {
-        if (answer == 1 || answer == 2)
-            return true;
-        return false;
-    }
 
-    public static boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
-        return true;
-    }
 
     public Game getGame() {
         return game;

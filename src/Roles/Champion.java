@@ -1,6 +1,11 @@
 package Roles;
 
-public class Champion extends MainRoles{
+import Player.Player;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Champion extends MainRoles {
 
     public Champion() {
         super("Champion");
@@ -14,5 +19,29 @@ public class Champion extends MainRoles{
     @Override
     public boolean isMafia() {
         return false;
+    }
+
+    public int act(ArrayList<Player> players, Player thePlayer) {
+
+        try {
+            thePlayer.getWriter().writeUTF(prepareMessage(players, thePlayer));
+            return getAnswer(thePlayer, 0, players.size() - 1);
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+
+    public String prepareMessage(ArrayList<Player> players, Player thePlayer) {
+        int index = 1;
+
+        String message = "Please select one of the following options for shooting\n0. Nobody\n";
+        for (Player player : players) {
+            if (player.equals(thePlayer))
+                continue;
+            message += index + ". " + player.getName() + "\n";
+            index++;
+        }
+
+        return message;
     }
 }

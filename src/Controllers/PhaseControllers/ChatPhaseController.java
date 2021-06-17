@@ -50,6 +50,9 @@ public class ChatPhaseController {
         }
     }
 
+    //Todo: implement that
+    public void startMafiaChat(){}
+
     public void sendMessageToAll(String message) throws IOException {
         for (Player player : players) {
             player.getWriter().writeUTF(message);
