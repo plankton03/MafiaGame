@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public class ChatPhaseHandler extends Thread {
 
+
     private ChatPhaseController controller;
     private Player thePlayer;
     private boolean isReadyToEndChat = false;
@@ -23,7 +24,7 @@ public class ChatPhaseHandler extends Thread {
     }
 
     public void startListening() {
-        String rcv = new String();
+        String rcv;
         while (true) {
             try {
                 rcv = thePlayer.getReader().readUTF();

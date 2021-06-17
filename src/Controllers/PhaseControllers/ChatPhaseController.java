@@ -5,7 +5,9 @@ import Game.Game;
 import Player.Player;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatPhaseController {
 
