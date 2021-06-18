@@ -4,6 +4,7 @@ import Player.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Champion extends MainRoles {
 
@@ -21,7 +22,7 @@ public class Champion extends MainRoles {
         return false;
     }
 
-    public int act(ArrayList<Player> players, Player thePlayer) {
+    public int act(LinkedList<Player> players, Player thePlayer) {
 
         try {
             thePlayer.getWriter().writeUTF(prepareMessage(players, thePlayer));
@@ -31,7 +32,7 @@ public class Champion extends MainRoles {
         }
     }
 
-    public String prepareMessage(ArrayList<Player> players, Player thePlayer) {
+    public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
         int index = 1;
 
         String message = "Please select one of the following options for shooting\n0. Nobody\n";

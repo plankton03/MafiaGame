@@ -5,6 +5,7 @@ import Player.Player;
 import javax.swing.text.PlainDocument;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class GotFather extends MainRoles {
 
@@ -22,7 +23,7 @@ public class GotFather extends MainRoles {
         return true;
     }
 
-    public int act(ArrayList<Player> players, Player thePlayer) {
+    public int act(LinkedList<Player> players, Player thePlayer) {
         try {
             thePlayer.getWriter().writeUTF(prepareMessage(players, thePlayer));
             return getAnswer(thePlayer, 1, players.size() - 1);
@@ -32,7 +33,7 @@ public class GotFather extends MainRoles {
 
     }
 
-    public String prepareMessage(ArrayList<Player> players, Player thePlayer) {
+    public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
         String message = "Please select the victim of the night\n";
         int index = 1;
         for (Player player : players) {

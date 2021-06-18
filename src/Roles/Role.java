@@ -4,7 +4,9 @@ public interface Role{
 //    private boolean isReadyToEnd
 
     boolean isMafia();
+    boolean isSilent();
     String getRole();
+    void setSilent(boolean silent);
 
     // TODO : 1. act dare
     //  2 . act khodesho ba zaman misaze va javabo mide biroon

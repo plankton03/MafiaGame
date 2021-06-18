@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public abstract class MainRoles implements Role {
     protected int answer;
+    private boolean isSilent = false;
 
     public MainRoles(String role) {
         this.role = role;
@@ -16,6 +17,14 @@ public abstract class MainRoles implements Role {
     private int nightChoice;
     private String role;
 
+    @Override
+    public boolean isSilent() {
+        return isSilent;
+    }
+
+    public void setSilent(boolean silent) {
+        isSilent = silent;
+    }
 
     public int getNightChoice() {
         return nightChoice;

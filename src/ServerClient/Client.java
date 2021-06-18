@@ -75,7 +75,7 @@ public class Client implements Runnable {
         }
     }
 
-    public void startMessaging() throws IOException {
+    public void startMessaging()  {
         String message;
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -83,7 +83,11 @@ public class Client implements Runnable {
                 break;
             message = scanner.nextLine();
             if (message != null) {
-                writer.writeUTF(message);
+                try {
+                    writer.writeUTF(message);
+                } catch (IOException e) {
+                    System.out.println("You're disconnected :(");
+                }
             }
         }
     }

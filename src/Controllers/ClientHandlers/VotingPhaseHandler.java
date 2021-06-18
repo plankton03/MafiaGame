@@ -70,7 +70,7 @@ public class VotingPhaseHandler extends Thread {
             names.add(i + ". " + player.getName());
             i++;
         }
-        String voteMessage = new String();
+        String voteMessage = "Players you can vote for as Mafia\n";
         for (String name : names)
             voteMessage += name + "\n";
         return voteMessage;
@@ -79,7 +79,8 @@ public class VotingPhaseHandler extends Thread {
     public void matchAnswer() {
 
         if (answer == 0) {
-            controller.getPlayersVote().put(thePlayer, null);
+//            controller.getPlayersVote().put(thePlayer, null);
+            return;
         }
         ConcurrentHashMap<Player, Integer> voteResult = controller.getVoteResults();
 

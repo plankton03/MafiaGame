@@ -17,6 +17,7 @@ public class Server {
         //TODO : get the num of players
         //TODO : create game players and roles
         //TODO : create chat controller
+        //TODO : check note book
 
         try {
 
@@ -37,9 +38,12 @@ public class Server {
             }
 
 
-            System.out.println("\nStarting day and chat phase.");
-            game.startDay();
-            System.out.println("\nChat phase is over.");
+//            System.out.println("\nStarting day and chat phase.");
+//            game.startDay();
+//            System.out.println("\nChat phase is over.");
+
+//            game.startVoting();
+
 
 
             game.sendToAll("Exit");

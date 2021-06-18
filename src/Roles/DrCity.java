@@ -4,6 +4,7 @@ import Player.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class DrCity extends MainRoles {
 
@@ -21,7 +22,7 @@ public class DrCity extends MainRoles {
         return false;
     }
 
-    public int act(Player thePlayer, ArrayList<Player> players, int numOfMafia) {
+    public int act(Player thePlayer, LinkedList<Player> players) {
 
         try {
             thePlayer.getWriter().writeUTF(prepareMessage(players, thePlayer));
@@ -31,7 +32,7 @@ public class DrCity extends MainRoles {
         }
     }
 
-    public String prepareMessage(ArrayList<Player> players, Player thePlayer) {
+    public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
         int index = 1;
         String message = "Please select one of the members below to save:\n";
         for (Player player : players) {

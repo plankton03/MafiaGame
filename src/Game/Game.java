@@ -2,6 +2,7 @@ package Game;
 
 import Controllers.PhaseControllers.ChatPhaseController;
 import Controllers.PhaseControllers.FirstNightController;
+import Controllers.PhaseControllers.VotingPhaseController;
 import Player.Player;
 
 import java.io.IOException;
@@ -43,6 +44,13 @@ public class Game {
         ChatPhaseController chatPhaseController = new ChatPhaseController(this);
 
         chatPhaseController.startChat();
+    }
+
+    public void startVoting(){
+        VotingPhaseController votingPhaseController = new VotingPhaseController(this);
+
+        votingPhaseController.startVotingPhase();
+
     }
 
     public LinkedList<Player> getPlayers() {

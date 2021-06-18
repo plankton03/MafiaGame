@@ -58,6 +58,12 @@ public class VotingPhaseController {
             votingPhaseHandler.start();
         }
 
+        try {
+            Thread.sleep(30*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         reportPlayersVot();
         reportVote();  //show results and exited players
 
@@ -73,8 +79,14 @@ public class VotingPhaseController {
             sendMessageToAll("None of the people had enough votes to leave the game.");
         } else {
             String message = new String();
-            for (Player player : suspectedPlayer)
-                message += player.getName();
+
+            for (int i =0;i<suspectedPlayer.size();i++){
+                if (i== suspectedPlayer.size() -1 ){
+                    message += suspectedPlayer.get(i).getName();
+                    break;
+                }
+                message += suspectedPlayer.get(i).getName() + " , ";
+            }
             sendMessageToAll(message + " died :)");
         }
     }

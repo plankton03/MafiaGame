@@ -4,8 +4,11 @@ import Player.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Psychologist extends MainRoles{
+
+
 
     public Psychologist() {
         super("Psychologist");
@@ -21,7 +24,7 @@ public class Psychologist extends MainRoles{
         return false;
     }
 
-    public int act(ArrayList<Player> players ,Player thePlayer){
+    public int act(LinkedList<Player> players , Player thePlayer){
 
         try {
             thePlayer.getWriter().writeUTF(prepareMessage(players,thePlayer));
@@ -32,7 +35,7 @@ public class Psychologist extends MainRoles{
 
     }
 
-    public String prepareMessage(ArrayList<Player> players ,Player thePlayer){
+    public String prepareMessage(LinkedList<Player> players , Player thePlayer){
             String message = "Please select one to silence.\n0. Nobody";
 
             int index =1;
