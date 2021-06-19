@@ -1,6 +1,7 @@
 package Controllers.PhaseControllers;
 
 import Controllers.ClientHandlers.ChatPhaseHandler;
+import Design.Color;
 import Game.Game;
 import Player.Player;
 
@@ -25,54 +26,92 @@ public class ChatPhaseController {
         chatPhaseHandlers = new LinkedList<>();
     }
 
-    public void startChat() {
-        try {
-            sendMessageToAll("\n......................................" +
-                    "\nThe day begins :)\n\nChat starts ...\n");
-            for (Player player : players) {
-                ChatPhaseHandler chatPhaseHandler = new ChatPhaseHandler(this, player);
-                chatPhaseHandlers.add(chatPhaseHandler);
-                chatPhaseHandler.start();
-            }
+    public Game getGame() {
+        return game;
+    }
 
-            long start = System.currentTimeMillis();
-            long end = start + chatTime;
-            while (System.currentTimeMillis() < end) {
-                if (allAreReadyToExitChat()) {
-                    sendMessageToAll("\n\nAll users announced their readiness to start voting. You can no longer chat.");
-                    return;
-                }
-            }
-            forceFinishChat();
-            sendMessageToAll("\n\nThe time allotted for the chat has expired. You can no longer chat with other users.");
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void startChat() {
+
+        sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
+
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "The chat phase of the day begins. You have 5 minutes to chat." +
+                "\nIf you are ready to vote, please enter a '#' character.\n" + Color.RESET);
+        for (Player player : players) {
+            ChatPhaseHandler chatPhaseHandler = new ChatPhaseHandler(this, player);
+            chatPhaseHandlers.add(chatPhaseHandler);
+            chatPhaseHandler.start();
         }
+
+        long start = System.currentTimeMillis();
+        long end = start + chatTime;
+        while (System.currentTimeMillis() < end) {
+            if (allAreReadyToExitChat()) {
+                sendMessageToAll(Color.CYAN_UNDERLINED + "\nAll users announced their readiness to start voting. " +
+                        "You can no longer chat." + Color.RESET);
+                return;
+            }
+        }
+        forceFinishChat();
+        sendMessageToAll(Color.CYAN_UNDERLINED + "\nThe time allotted for the chat has expired. " +
+                "You can no longer chat with other users." + Color.RESET);
     }
 
 
-    public void sendMessageToAll(String message) throws IOException {
+    public void sendMessageToAll(String message) {
         for (Player player : players) {
-            player.getWriter().writeUTF(message);
+            try {
+                player.getWriter().writeUTF(message);
+            } catch (IOException e) {
+                players.remove(player);
+                sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
+                        + " is out of the game." + Color.RESET);
+            }
         }
         for (Player player : deadPlayers) {
-            player.getWriter().writeUTF(message);
+            try {
+                player.getWriter().writeUTF(message);
+            } catch (IOException e) {
+                players.remove(player);
+                sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
+                        + " is out of the game." + Color.RESET);
+            }
         }
     }
 
-    public void sendMessageToAll(String msg, ChatPhaseHandler thePlayer) throws IOException {
-        String message = new String();
+    public void sendMessageToAll(String msg, ChatPhaseHandler thePlayer){
+        String message;
         for (ChatPhaseHandler player : chatPhaseHandlers) {
             if (player.equals(thePlayer)) {
-                player.getThePlayer().getWriter().writeUTF("You : " + msg);
+                try {
+                    player.getThePlayer().getWriter().writeUTF(Color.WHITE_UNDERLINED + "You :"
+                            + Color.RESET +"  "+ Color.WHITE_BOLD_BRIGHT + msg + Color.RESET);
+                } catch (IOException e) {
+                    players.remove(player);
+                    sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
+                            + " is out of the game." + Color.RESET);
+                }
                 continue;
             }
-            message = thePlayer.getThePlayer().getName() + " : " + msg;
-            player.getThePlayer().getWriter().writeUTF(message);
+            message = Color.WHITE_UNDERLINED + thePlayer.getThePlayer().getName() + " : " + Color.RESET;
+            message += Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
+            try {
+                player.getThePlayer().getWriter().writeUTF(message);
+            } catch (IOException e) {
+                players.remove(player);
+                sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
+                        + " is out of the game." + Color.RESET);
+            }
         }
         for (Player player : deadPlayers) {
-            message = thePlayer.getThePlayer().getName() + " : " + msg;
-            player.getWriter().writeUTF(message);
+            message = Color.WHITE_UNDERLINED + thePlayer.getThePlayer().getName() + " : " + Color.RESET;
+            message += Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
+            try {
+                player.getWriter().writeUTF(message);
+            } catch (IOException e) {
+                players.remove(player);
+                sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
+                        + " is out of the game." + Color.RESET);
+            }
         }
     }
 

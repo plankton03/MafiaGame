@@ -1,5 +1,7 @@
 package Controllers.ClientHandlers;
 
+import Controllers.PhaseControllers.FirstNightController;
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -9,10 +11,12 @@ public class FirstNightHandler extends Thread {
 
     private LinkedList<Player> players;
     private Player thePlayer;
+    private FirstNightController controller;
 
-    public FirstNightHandler(LinkedList<Player> players, Player thePlayer) {
+    public FirstNightHandler(LinkedList<Player> players, Player thePlayer, FirstNightController controller) {
         this.players = players;
         this.thePlayer = thePlayer;
+        this.controller = controller;
     }
 
     @Override
@@ -23,7 +27,9 @@ public class FirstNightHandler extends Thread {
         try {
             thePlayer.getWriter().writeUTF(message);
         } catch (IOException e) {
-            e.printStackTrace();
+            players.remove(thePlayer);
+            controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + thePlayer.getName()
+                    + " is out of the game." + Color.RESET);
         }
 
     }
@@ -34,30 +40,30 @@ public class FirstNightHandler extends Thread {
         else if (thePlayer.getRole().getRole().equals("Mayor"))
             return prepareMayorMessage();
         else
-            return "The game introduction night is underway :)";
+            return Color.CYAN_UNDERLINED+"The game introduction night is underway :)"+Color.RESET;
     }
 
     private String prepareMafiaMessage() {
-        String message = "The list of Mafia members is as follows :\n";
+        String message = Color.CYAN_UNDERLINED+"The list of Mafia members is as follows :\n"+Color.RESET;
 
         for (Player player : players) {
             if (player.equals(thePlayer))
                 continue;
             if (player.getRole().isMafia()) {
-                message += "* " + player.getName() + " : " + player.getRole().getRole() + " \n";
+                message += Color.CYAN_BOLD_BRIGHT+"* " + player.getName() + " : " + player.getRole().getRole() + " \n"+Color.RESET;
             }
         }
 
-        if (message.equals("The list of Mafia members is as follows :\n"))
-            message = "There is no any mafia in the city :(";
+        if (message.equals( Color.CYAN_UNDERLINED+"The list of Mafia members is as follows :\n"+Color.RESET))
+            message = Color.CYAN_UNDERLINED+"There is no any mafia in the city :("+Color.CYAN_UNDERLINED;
         return message;
     }
 
     private String prepareMayorMessage() {
         for (Player player : players) {
             if (player.getRole().getRole().equals("City Doctor"))
-                return "* " + player.getName() + " : City Doctor \n";
+                return Color.CYAN_BOLD_BRIGHT+"* " + player.getName() + " : City Doctor \n"+Color.RESET;
         }
-        return "There is no any doctor in the city ";
+        return Color.CYAN_UNDERLINED+"There is no any doctor in the city "+Color.RESET;
     }
 }

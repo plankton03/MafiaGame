@@ -43,7 +43,7 @@ public class Client implements Runnable {
 //        System.out.println("please enter the port :");
 //        port = scanner.nextLine();
         socket = new Socket(ipAddress, Integer.parseInt(port));
-        System.out.println("\n\nYou are connected to the game server :)");
+//        System.out.println("\n\nYou are connected to the game server :)");
         reader = new DataInputStream(socket.getInputStream());
         writer = new DataOutputStream(socket.getOutputStream());
 
@@ -83,6 +83,16 @@ public class Client implements Runnable {
                 break;
             message = scanner.nextLine();
             if (message != null) {
+                if (message.equals("exit")){
+                    try {
+                        writer.close();
+                        reader.close();
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
                 try {
                     writer.writeUTF(message);
                 } catch (IOException e) {

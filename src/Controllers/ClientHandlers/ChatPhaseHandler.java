@@ -1,6 +1,7 @@
 package Controllers.ClientHandlers;
 
 import Controllers.PhaseControllers.ChatPhaseController;
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -30,18 +31,19 @@ public class ChatPhaseHandler extends Thread {
                 rcv = thePlayer.getReader().readUTF();
                 if (rcv.isBlank())
                     continue;
-                else if (rcv.equals("$")) {
+                else if (rcv.equals("#")) {
                     isReadyToEndChat = true;
                     rcv = "I'm ready to vote";
                 }
                 controller.sendMessageToAll(rcv, this);
                 if (exitChat)
                 {
-                    System.out.println("for debug");
                     break;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                controller.getGame().getPlayers().remove(thePlayer);
+                controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + thePlayer.getName()
+                        + " is out of the game." + Color.RESET);
             }
         }
     }

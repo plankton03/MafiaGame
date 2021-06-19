@@ -1,5 +1,6 @@
 package Player;
 
+import Design.Color;
 import Game.Game;
 import Roles.Role;
 
@@ -14,11 +15,8 @@ public class Player implements Runnable {
     private Socket socket;
     private DataInputStream reader;
     private DataOutputStream writer;
+    private Color color = new Color();
 
-    //TODO : in run:
-    // 1. get name
-    // 2. check name
-    // 3. send part for player
 
     public Player(Socket socket, Game game) {
         this.socket = socket;
@@ -35,7 +33,8 @@ public class Player implements Runnable {
     @Override
     public void run() {
         try {
-            writer.writeUTF("\nWelcome to the Mafia game *_*\n\n\nPlease enter a username for yourself ...");
+            writer.writeUTF(color.CYAN_BOLD_BRIGHT + "\n\t\t\t\tWelcome to the Mafia game *_*" + color.RESET);
+            writer.writeUTF(color.CYAN_UNDERLINED + "\n\nPlease enter a username for yourself :" + color.RESET);
             while (true) {
                 String chosenName = reader.readUTF();
                 if (!game.getInitializer().getNames().contains(chosenName) && !chosenName.isBlank()) {
@@ -43,12 +42,15 @@ public class Player implements Runnable {
                     name = chosenName;
                     break;
                 } else
-                    writer.writeUTF("\nThis username has already been used or is not valid :(\nPlease choose another username.");
+                    writer.writeUTF(color.CYAN_UNDERLINED + "This username has already been used or is not valid :(" +
+                            "\nPlease choose another username." + color.RESET);
             }
-            writer.writeUTF("Your role in the game : " + role.getRole());
-
+            writer.writeUTF(color.CYAN_BOLD_BRIGHT + "\n\t\t\t\tYour role in the game : " + role.getRole() + color.RESET);
+            writer.writeUTF(color.CYAN_UNDERLINED+"\nIf you are ready to start the game, enter a" +
+                    " text of your choice or press Enter.\nKeep in mind that you can exit at any time by entering the exit word."+color.RESET);
+            reader.readUTF();
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+            System.out.println("Player disconnected ");
         }
 
         isAlive = true;

@@ -14,11 +14,6 @@ public class Server {
         Server server = new Server();
         final int port = 7000;
 
-        //TODO : get the num of players
-        //TODO : create game players and roles
-        //TODO : create chat controller
-        //TODO : check note book
-
         try {
 
             ServerSocket serverSocket = new ServerSocket(port);
@@ -27,7 +22,7 @@ public class Server {
             int numOfPlayers = getNumOfPlayers();
             Game game = new Game(serverSocket, numOfPlayers);
 
-            System.out.println("\nStarting first night ... ");
+            System.out.println("\n\nStarting first night ... ");
             game.startFirstNight();
             System.out.println("\nThe first night is over.");
 
@@ -38,21 +33,21 @@ public class Server {
             }
 
 
-//            System.out.println("\nStarting day and chat phase.");
-//            game.startDay();
-//            System.out.println("\nChat phase is over.");
+            System.out.println("\nStarting day and chat phase.");
+            game.startDay();
+            System.out.println("\nChat phase is over.");
 
 //            game.startVoting();
 //
 
-            int i = 0;
-            while (i < 5) {
-
-                game.startNight();
-                i++;
-            }
-            System.out.println("Exot");
+//            int i = 0;
+//            while (i < 5) {
 //
+//                game.startNight();
+//                i++;
+//            }
+//            System.out.println("Exot");
+
             game.sendToAll("Exit");
 
 

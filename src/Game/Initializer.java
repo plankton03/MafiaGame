@@ -89,6 +89,7 @@ public class Initializer {
         for (int i = 1; i <= numOfPlayers; i++) {
             players.add(new Player(serverSocket.accept(), game));
             System.out.println("Player " + i + " connected ");
+            players.get(players.size()-1).getWriter().writeUTF("You are connected to the game server :)");
         }
         return players;
     }
