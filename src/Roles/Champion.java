@@ -1,5 +1,6 @@
 package Roles;
 
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -35,11 +36,12 @@ public class Champion extends MainRoles {
     public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
         int index = 1;
 
-        String message = "Please select one of the following options for shooting\n0. Nobody\n";
+        String message ="\n\n"+ Color.PURPLE_UNDERLINED + "Please select one of the following options for shooting" +
+                Color.RESET+Color.PURPLE+"\n0. Nobody\n"+Color.RESET;
         for (Player player : players) {
             if (player.equals(thePlayer))
                 continue;
-            message += index + ". " + player.getName() + "\n";
+            message += Color.PURPLE+ index + ". " + player.getName() + "\n"+Color.RESET;
             index++;
         }
 

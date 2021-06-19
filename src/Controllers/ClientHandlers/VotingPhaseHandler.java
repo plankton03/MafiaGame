@@ -4,10 +4,8 @@ import Controllers.PhaseControllers.VotingPhaseController;
 import Design.Color;
 import Player.Player;
 
-import javax.swing.text.PlainDocument;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class VotingPhaseHandler extends Thread {
@@ -40,6 +38,7 @@ public class VotingPhaseHandler extends Thread {
     }
 
     public void startVoting() {
+        String answer = "";
         try {
             thePlayer.getWriter().writeUTF(playersListToVote());
 
@@ -47,26 +46,44 @@ public class VotingPhaseHandler extends Thread {
             long end = start + chatTime;
             while (System.currentTimeMillis() < end) {
                 while (true) {
-                    String answer = thePlayer.getReader().readUTF();
+                    answer = thePlayer.getReader().readUTF();
                     if (isInteger(answer)) {
 
 //                        this.answer = Integer.parseInt(answer);
                         if (isValidAnswer(Integer.parseInt(answer))) {
-                            if (this.answer > 0){
+                            if (this.answer > 0) {
                                 matchAnswer(-1);
                             }
                             this.answer = Integer.parseInt(answer);
                             matchAnswer(+1);
-                            thePlayer.getWriter().writeUTF(Color.CYAN_UNDERLINED+"If you wish, you can vote another."+Color.RESET);
+                            thePlayer.getWriter().writeUTF(Color.CYAN_UNDERLINED + "If you wish, you can vote another." +
+                                    Color.RESET);
                         }
                     } else
-                        thePlayer.getWriter().writeUTF(Color.WHITE_UNDERLINED+"The answer you entered is not a valid answer" +
-                                ":( Please try again."+Color.RESET);
+                        thePlayer.getWriter().writeUTF(Color.WHITE_UNDERLINED + "The answer you entered is not a" +
+                                " valid answer" +
+                                ":( Please try again." + Color.RESET);
+                }
+            }
+            if (answer.equals("")) {
+                thePlayer.setInactive(thePlayer.getInactive() + 1);
+                if (thePlayer.getInactive() == 3) {
+                    try {
+                        thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT + "You are dead :(" + Color.RESET);
+                        controller.getPlayers().remove(thePlayer);
+                        controller.getDeadPlayers().add(thePlayer);
+                        (new ExitHandler(thePlayer, controller.getGame())).start();
+                    } catch (IOException e) {
+                        controller.getGame().getPlayers().remove(this);
+                        controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " +
+                                thePlayer.getName() + " is out of the game." + Color.RESET);
+                    }
                 }
             }
         } catch (IOException e) {
             controller.getGame().getPlayers().remove(this);
-            controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT+"!!! "+thePlayer.getName()+" is out of the game."+Color.RESET);
+            controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " +
+                    thePlayer.getName() + " is out of the game." + Color.RESET);
         }
     }
 
@@ -80,9 +97,9 @@ public class VotingPhaseHandler extends Thread {
             names.add(i + ". " + player.getName());
             i++;
         }
-        String voteMessage = "\t"+Color.CYAN_UNDERLINED +"Players you can vote for as Mafia\n"+Color.RESET;
+        String voteMessage = "\t" + Color.CYAN_UNDERLINED + "Players you can vote for as Mafia\n" + Color.RESET;
         for (String name : names)
-            voteMessage += Color.CYAN_BOLD_BRIGHT+"\t"+name + "\n"+Color.RESET;
+            voteMessage += Color.CYAN_BOLD_BRIGHT + "\t" + name + "\n" + Color.RESET;
         return voteMessage;
     }
 

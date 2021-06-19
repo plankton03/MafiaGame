@@ -1,6 +1,7 @@
 package Roles;
 
 
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -70,7 +71,8 @@ public abstract class MainRoles implements Role {
                     return answer;
                 }
             } else
-                thePlayer.getWriter().writeUTF("The input entered is invalid :( Please try again ...");
+                thePlayer.getWriter().writeUTF(Color.PURPLE_UNDERLINED +
+                        "The input entered is invalid :( Please try again ..."+Color.RESET);
         }
     }
 

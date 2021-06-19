@@ -1,5 +1,6 @@
 package Roles;
 
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -36,13 +37,14 @@ public class Psychologist extends MainRoles{
     }
 
     public String prepareMessage(LinkedList<Player> players , Player thePlayer){
-            String message = "Please select one to silence.\n0. Nobody\n";
+            String message = "\n\n"+Color.PURPLE_UNDERLINED +"Please select one to silence." +
+                    Color.RESET+Color.PURPLE+"\n0. Nobody\n"+Color.RESET;
 
             int index =1;
             for (Player player : players){
                 if (player.equals(thePlayer))
                     continue;
-                message+= index + ". "+player.getName()+"\n";
+                message+= Color.PURPLE+index + ". "+player.getName()+"\n"+Color.RESET;
                 index++;
             }
             return message;

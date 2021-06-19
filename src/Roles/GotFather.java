@@ -1,5 +1,6 @@
 package Roles;
 
+import Design.Color;
 import Player.Player;
 
 import javax.swing.text.PlainDocument;
@@ -34,12 +35,13 @@ public class GotFather extends MainRoles {
     }
 
     public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
-        String message = "Please select the victim of the night\n";
+        String message ="\n\n"+ Color.PURPLE_UNDERLINED + "Please select the victim of the night\n"+Color.RESET;
         int index = 1;
+
         for (Player player : players) {
             if (player.equals(thePlayer))
                 continue;
-            message += index + ". " + player.getName() + "\n";
+            message += Color.PURPLE+index + ". " + player.getName() + "\n"+Color.RESET;
             index++;
         }
         return message;

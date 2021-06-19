@@ -37,16 +37,16 @@ public class Server {
 //            game.startDay();
 //            System.out.println("\nChat phase is over.");
 
-            game.startVoting();
+//            game.startVoting();
 //
 
-//            int i = 0;
-//            while (i < 5) {
-//
-//                game.startNight();
-//                i++;
-//            }
-//            System.out.println("Exot");
+            int i = 0;
+            while (i < 5) {
+
+                game.startNight();
+                i++;
+            }
+            System.out.println("Exot");
 
             game.sendToAll("Exit");
 

@@ -138,11 +138,22 @@ public class VotingPhaseController {
         }
     }
 
+    public int findMax(){
+        int max = 0;
+        for (Map.Entry<Player, Integer> player : voteResults.entrySet()) {
+            if (player.getValue() > max) {
+                max = player.getValue();
+            }
+        }
+        return max;
+    }
+
     public void announcementOfVotingResults() {
-        int max = 1;
+        int max = findMax();
+        if (max == 1)
+            return;
         for (Map.Entry<Player, Integer> player : voteResults.entrySet()) {
             if (player.getValue() >= max) {
-                max = player.getValue();
                 suspectedPlayer.add(player.getKey());
             }
         }

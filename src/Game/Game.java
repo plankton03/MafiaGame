@@ -8,6 +8,7 @@ import Player.Player;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Game {
@@ -17,6 +18,7 @@ public class Game {
     private ServerSocket serverSocket;
     private int numOFPlayers;
     private Initializer initializer;
+    private ArrayList<Player> backupList = new ArrayList<Player>();
 
     public Game(ServerSocket serverSocket, int numOFPlayers) {
         this.serverSocket = serverSocket;
@@ -30,8 +32,15 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        for (Player player : players){
+            backupList.add(player);
+        }
     }
 
+    public ArrayList<Player> getBackupList() {
+        return backupList;
+    }
 
     public void startFirstNight() {
         FirstNightController firstNightController = new FirstNightController(this);

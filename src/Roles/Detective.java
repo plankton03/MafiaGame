@@ -1,5 +1,6 @@
 package Roles;
 
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -33,13 +34,13 @@ public class Detective extends MainRoles{
     }
 
     public String prepareMessage(LinkedList<Player> players , Player thePlayer){
-        String message = "Please select one of the people to query.\n";
+        String message = "\n\n"+Color.PURPLE_UNDERLINED + "Please select one of the people to query.\n"+Color.RESET;
 
         int index =1;
         for (Player player : players){
             if (player.equals(thePlayer))
                 continue;
-            message+= index + ". "+player.getName()+"\n";
+            message+= Color.PURPLE+index + ". "+player.getName()+"\n"+Color.RESET;
             index++;
         }
         return message;

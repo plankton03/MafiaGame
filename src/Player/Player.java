@@ -16,6 +16,7 @@ public class Player implements Runnable {
     private DataInputStream reader;
     private DataOutputStream writer;
     private Color color = new Color();
+    private int inactive = 0;
 
 
     public Player(Socket socket, Game game) {
@@ -28,6 +29,14 @@ public class Player implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getInactive() {
+        return inactive;
+    }
+
+    public void setInactive(int inactive) {
+        this.inactive = inactive;
     }
 
     @Override

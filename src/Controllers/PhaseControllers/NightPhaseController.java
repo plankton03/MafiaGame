@@ -3,6 +3,7 @@ package Controllers.PhaseControllers;
 import Controllers.ClientHandlers.ChatPhaseHandler;
 import Controllers.ClientHandlers.ExitHandler;
 import Controllers.ClientHandlers.MafiaChatHandler;
+import Design.Color;
 import Game.Game;
 import Player.Player;
 import Roles.*;
@@ -23,12 +24,17 @@ public class NightPhaseController {
     private ArrayList<MafiaChatHandler> chatHandlers = new ArrayList<>();
 //    private boolean chatIsOver ;
     private HashMap<Role, Integer> answers;
-    private long chatTime = 1000*1000;
+    private long chatTime = 5*60*1000;
+    private boolean inquiry = false;
+
+
+    public Game getGame() {
+        return game;
+    }
 
     private ArrayList<Player> deadPlayersAtNight;
 
     public NightPhaseController(Game game) {
-//        chatIsOver = false;
         this.game = game;
         players = game.getPlayers();
         deadPlayers = game.getDeadPlayers();
@@ -52,17 +58,22 @@ public class NightPhaseController {
 
     public void startNightEvents() {
 
+
+        sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
+
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "The night begins.\n" + Color.RESET);
+
 //        reset();
 
-        sendMessageToAll("Starting night ...");
+//        sendMessageToAll("Starting night ...");
         startMafiaChat();
 //
-        System.out.println("Ending chat");
+//        System.out.println("Ending chat");
         askQuestions();
 
         applyResults();
 
-        sendMessageToAll("Night events ... ");
+//        sendMessageToAll("Night events ... ");
         reportNightEvents();
 
         removeDeadPlayers();
@@ -70,6 +81,10 @@ public class NightPhaseController {
     }
 
     public void reportNightEvents() {
+        sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
+
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "The night is over.\n" + Color.RESET);
+
         String message = "";
         if (deadPlayersAtNight.size() == 0)
             message = "Nobody";
@@ -81,7 +96,30 @@ public class NightPhaseController {
             message += deadPlayersAtNight.get(i).getName() + " , ";
         }
         message += " died :)";
-        sendMessageToAll(message);
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT+message+Color.RESET);
+
+        if (inquiry){
+            reportRoles();
+        }
+
+        reportSilence();
+    }
+
+    public void reportSilence(){
+        for (Player player : players){
+            if (player.getRole().isSilent())
+                sendMessageToAll(Color.CYAN_BOLD_BRIGHT+player.getName()+" can not speak today."+Color.RESET);
+        }
+    }
+
+    public void reportRoles(){
+        String message = "\t";
+        for (Player player : game.getBackupList()){
+            if (!players.contains(player)){
+                message+="   "+player.getRole().getRole();
+            }
+        }
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT+message+Color.RESET);
     }
 
     public void removeDeadPlayers() {
@@ -90,12 +128,14 @@ public class NightPhaseController {
         for (Player player : deadPlayersAtNight) {
             if (players.contains(player)) {
                 try {
-                    player.getWriter().writeUTF("You are dead :(");
+                    player.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT+"You are dead :("+Color.RESET);
                     players.remove(player);
                     deadPlayers.add(player);
                     (new ExitHandler(player, game)).start();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    game.getPlayers().remove(player);
+                    sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
+                            + " is out of the game." + Color.RESET);
                 }
             }
         }
@@ -130,6 +170,8 @@ public class NightPhaseController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }else if (role instanceof Pitman){
+                inquiry = true;
             }
         }
 
@@ -166,12 +208,9 @@ public class NightPhaseController {
 
         while (System.currentTimeMillis() < end) {
             if (chatIsOver()) {
-                System.out.println("Shat is over in while");
                 break;
             }
         }
-//        setChatIsOver(true);
-
     }
 
     public boolean chatIsOver(){
@@ -184,13 +223,6 @@ public class NightPhaseController {
         return true;
     }
 
-
-
-    public void exitChat() {
-        for (MafiaChatHandler handler : chatHandlers) {
-            handler.setExitChat(true);
-        }
-    }
 
     public ArrayList<MafiaChatHandler> getChatHandlers() {
         return chatHandlers;
@@ -208,7 +240,7 @@ public class NightPhaseController {
             try {
                 player.getWriter().writeUTF(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                deadPlayers.remove(player);
             }
         }
     }
@@ -218,35 +250,41 @@ public class NightPhaseController {
         for (MafiaChatHandler player : chatHandlers) {
             if (player.equals(handler)) {
                 try {
-                    player.getThePlayer().getWriter().writeUTF("You : " + msg);
+                    player.getThePlayer().getWriter().writeUTF(Color.WHITE_UNDERLINED+"You"+Color.RESET+
+                            "   "+Color.WHITE_BOLD_BRIGHT+ msg+Color.RESET);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                  game.getPlayers().remove(player.getThePlayer());
+                    sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getThePlayer().getName()
+                            + " is out of the game." + Color.RESET);
                 }
                 continue;
-            }
-            message = handler.getThePlayer().getName() + " : " + msg;
-            try {
-                player.getThePlayer().getWriter().writeUTF(message);
-            } catch (IOException e) {
-                e.printStackTrace();
+            }else {
+                message = Color.WHITE_UNDERLINED + handler.getThePlayer().getName() + Color.RESET + "   "
+                        + Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
+                try {
+                    player.getThePlayer().getWriter().writeUTF(message);
+                } catch (IOException e) {
+                    getGame().getPlayers().remove(player.getThePlayer());
+                    sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getThePlayer().getName()
+                            + " is out of the game." + Color.RESET);
+                }
             }
         }
         for (Player player : deadPlayers) {
-            message = handler.getThePlayer().getName() + " : " + msg;
+            message = Color.WHITE_UNDERLINED + handler.getThePlayer().getName() + Color.RESET + "   "
+                    + Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
             try {
                 player.getWriter().writeUTF(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                deadPlayers.remove(player);
             }
         }
     }
 
     public synchronized void setChatIsOver(boolean chatIsOver) {
         for (MafiaChatHandler handler : chatHandlers){
-            System.out.println("Chat is over in method  ");
             handler.setExitChat(true);
         }
-//        this.chatIsOver = chatIsOver;
     }
 
     public void askQuestions() {
@@ -322,7 +360,6 @@ public class NightPhaseController {
 
 
     public void askPitman() {
-
         for (Player player : players) {
             if (player.getRole() instanceof Pitman) {
                 Pitman pitman = (Pitman) player.getRole();
@@ -335,11 +372,4 @@ public class NightPhaseController {
 
     }
 
-    public Player findPlayerBasedOnRole(String role) {
-        for (Player player : players) {
-            if (player.getRole().getRole().equals(role))
-                return player;
-        }
-        return null;
-    }
 }

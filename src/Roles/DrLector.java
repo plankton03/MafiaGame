@@ -1,5 +1,6 @@
 package Roles;
 
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -28,8 +29,8 @@ public class DrLector extends MainRoles {
 
             if (answer == players.indexOf(thePlayer) + 1) {
                 if (saveMySelf) {
-                    thePlayer.getWriter().writeUTF("You have used your opportunity to save yourself once. " +
-                            "Please select another person : ");
+                    thePlayer.getWriter().writeUTF(Color.PURPLE_UNDERLINED +"You have used your opportunity to save yourself once. " +
+                            "Please select another person : "+Color.RESET);
                     act(thePlayer, players,numOfMafia);
                 } else {
                     saveMySelf = true;
@@ -44,15 +45,15 @@ public class DrLector extends MainRoles {
 
     public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
         int index = 1;
-        String message = "Please select one of the members below to save:\n";
+        String message ="\n\n"+ Color.PURPLE_UNDERLINED+"Please select one of the members below to save:\n"+Color.RESET ;
         for (Player player : players) {
             if (player.getRole().isMafia()) {
                 if (player.getRole().equals(this)) {
-                    message += index + ". Yourself\n";
+                    message +=Color.PURPLE+ index + ". Yourself\n"+Color.RESET;
                     index++;
                     continue;
                 }
-                message += index + ". " + player.getName() + " ... " + player.getRole().getRole() + "\n";
+                message += Color.PURPLE+index + ". " + player.getName() + "  ->  " + player.getRole().getRole() + "\n"+Color.RESET;
                 index++;
             }
         }

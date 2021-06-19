@@ -23,7 +23,7 @@ public class Mayor extends MainRoles{
 
     public int act(Player thePlayer) {
         try {
-            thePlayer.getWriter().writeUTF(Color.PURPLE_UNDERLINED +"\nDo you want to cancel the vote?" +
+            thePlayer.getWriter().writeUTF("\n\n"+Color.PURPLE_UNDERLINED +"\nDo you want to cancel the vote?" +
                     Color.RESET+Color.PURPLE+"\n1. Yes\n2. No"+Color.RESET);
             return getAnswer(thePlayer,1,2);
         } catch (IOException e) {

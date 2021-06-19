@@ -2,6 +2,7 @@ package Controllers.ClientHandlers;
 
 import Controllers.PhaseControllers.ChatPhaseController;
 import Controllers.PhaseControllers.NightPhaseController;
+import Design.Color;
 import Player.Player;
 import Roles.GotFather;
 
@@ -20,38 +21,44 @@ public class MafiaChatHandler extends Thread {
 
     @Override
     public void run() {
+        try {
+            thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT+"\nMafia members chat starts. This chat lasts until " +
+                    "the head of the Mafia announces his readiness by sending a '#' character or takes 5 minutes."+Color.RESET);
+        } catch (IOException e) {
+            controller.getGame().getPlayers().remove(thePlayer);
+            controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + thePlayer.getName()
+                    + " is out of the game." + Color.RESET);
+        }
         startListening();
     }
 
     public void startListening() {
 
-        String rcv ;
+        String rcv;
         while (true) {
             try {
-                if (exitChat)
-                {
-                    System.out.println("in handler ");
+                if (exitChat) {
                     break;
                 }
                 rcv = thePlayer.getReader().readUTF();
                 if (rcv.isBlank())
                     continue;
                 else if (rcv.equals("#") && thePlayer.getRole() instanceof GotFather) {
-                    controller.sendMessageToAll("I made my decision",this);
+                    controller.sendMessageToAll("I made my decision", this);
                     controller.setChatIsOver(true);
                     controller.getChatHandlers().remove(this);
-                    controller.sendMessageToAll("write any text you want , or click enter to exit the game :)",this);
+                    controller.sendMessageToAll("write any text you want , or click enter to exit the game :)", this);
                     break;
                 }
                 controller.sendMessageToAll(rcv, this);
-                if (exitChat)
-                {
-                    System.out.println("in handler ");
-                    thePlayer.getWriter().writeUTF("The consultation of Mafia members is over.");
+                if (exitChat) {
+                    thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT+"The consultation of Mafia members is over."+Color.RESET);
                     break;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                controller.getGame().getPlayers().remove(thePlayer);
+                controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + thePlayer.getName()
+                        + " is out of the game." + Color.RESET);
             }
         }
     }
