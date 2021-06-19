@@ -20,16 +20,20 @@ public class NightPhaseController {
     private LinkedList<Player> players;
     private LinkedList<Player> deadPlayers;
     private ArrayList<Player> mafiaPlayers;
-    private ArrayList<MafiaChatHandler> chatHandlers;
-    private boolean chatIsOver = false;
+    private ArrayList<MafiaChatHandler> chatHandlers = new ArrayList<>();
+//    private boolean chatIsOver ;
     private HashMap<Role, Integer> answers;
+    private long chatTime = 1000*1000;
 
     private ArrayList<Player> deadPlayersAtNight;
 
     public NightPhaseController(Game game) {
+//        chatIsOver = false;
         this.game = game;
         players = game.getPlayers();
         deadPlayers = game.getDeadPlayers();
+
+        mafiaPlayers = new ArrayList<Player>();
 
         for (Player player : players) {
             if (player.getRole().isMafia())
@@ -40,16 +44,25 @@ public class NightPhaseController {
         deadPlayersAtNight = new ArrayList<Player>();
     }
 
+    public ArrayList<Player> getMafiaPlayers() {
+        return mafiaPlayers;
+    }
+
+    //todo : if baraye estelam
+
     public void startNightEvents() {
 
 //        reset();
 
+        sendMessageToAll("Starting night ...");
         startMafiaChat();
-
+//
+        System.out.println("Ending chat");
         askQuestions();
 
         applyResults();
 
+        sendMessageToAll("Night events ... ");
         reportNightEvents();
 
         removeDeadPlayers();
@@ -58,6 +71,8 @@ public class NightPhaseController {
 
     public void reportNightEvents() {
         String message = "";
+        if (deadPlayersAtNight.size() == 0)
+            message = "Nobody";
         for (int i = 0; i < deadPlayersAtNight.size(); i++) {
             if (i == deadPlayersAtNight.size() - 1) {
                 message += deadPlayersAtNight.get(i).getName();
@@ -70,6 +85,8 @@ public class NightPhaseController {
     }
 
     public void removeDeadPlayers() {
+        if (deadPlayersAtNight.size() == 0)
+            return;
         for (Player player : deadPlayersAtNight) {
             if (players.contains(player)) {
                 try {
@@ -89,6 +106,8 @@ public class NightPhaseController {
         for (Player player : players) {
 
             Role role = player.getRole();
+            if (!answers.containsKey(role))
+                continue;
             if (answers.get(role) == 0)
                 continue;
             if (role instanceof Champion) {
@@ -105,7 +124,7 @@ public class NightPhaseController {
                 Player chosenPlayer = matchAnswers(answers.get(role), player);
                 try {
                     if (chosenPlayer.getRole() instanceof GotFather || !chosenPlayer.getRole().isMafia())
-                        chosenPlayer.getWriter().writeUTF("Citizen");
+                        player.getWriter().writeUTF("Citizen");
                     else
                         chosenPlayer.getWriter().writeUTF("Mafia");
                 } catch (IOException e) {
@@ -142,14 +161,33 @@ public class NightPhaseController {
             mafiaChatHandler.start();
         }
 
-        while (true) {
-            if (chatIsOver)
-                return;
+        long start = System.currentTimeMillis();
+        long end = start + chatTime;
+
+        while (System.currentTimeMillis() < end) {
+            if (chatIsOver()) {
+                System.out.println("Shat is over in while");
+                break;
+            }
         }
+//        setChatIsOver(true);
+
     }
 
-    public void exitChat(ArrayList<MafiaChatHandler> handlers) {
-        for (MafiaChatHandler handler : handlers) {
+    public boolean chatIsOver(){
+        if (chatHandlers.size() == 0)
+            return true;
+        for (MafiaChatHandler handler : chatHandlers){
+            if (handler.isAlive())
+                return false;
+        }
+        return true;
+    }
+
+
+
+    public void exitChat() {
+        for (MafiaChatHandler handler : chatHandlers) {
             handler.setExitChat(true);
         }
     }
@@ -166,10 +204,17 @@ public class NightPhaseController {
                 e.printStackTrace();
             }
         }
+        for (Player player : game.getDeadPlayers()){
+            try {
+                player.getWriter().writeUTF(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void sendMessageToAll(String msg, MafiaChatHandler handler) {
-        String message = new String();
+        String message ;
         for (MafiaChatHandler player : chatHandlers) {
             if (player.equals(handler)) {
                 try {
@@ -196,8 +241,12 @@ public class NightPhaseController {
         }
     }
 
-    public void setChatIsOver(boolean chatIsOver) {
-        this.chatIsOver = chatIsOver;
+    public synchronized void setChatIsOver(boolean chatIsOver) {
+        for (MafiaChatHandler handler : chatHandlers){
+            System.out.println("Chat is over in method  ");
+            handler.setExitChat(true);
+        }
+//        this.chatIsOver = chatIsOver;
     }
 
     public void askQuestions() {

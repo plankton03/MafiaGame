@@ -40,8 +40,6 @@ public class ExitHandler extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public boolean isValidAnswer(int answer) {

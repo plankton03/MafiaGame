@@ -2,6 +2,7 @@ package Game;
 
 import Controllers.PhaseControllers.ChatPhaseController;
 import Controllers.PhaseControllers.FirstNightController;
+import Controllers.PhaseControllers.NightPhaseController;
 import Controllers.PhaseControllers.VotingPhaseController;
 import Player.Player;
 
@@ -45,7 +46,13 @@ public class Game {
 
         chatPhaseController.startChat();
     }
+    public void startNight() {
 
+        NightPhaseController nightPhaseController = new NightPhaseController(this);
+
+        nightPhaseController.startNightEvents();
+
+    }
     public void startVoting(){
         VotingPhaseController votingPhaseController = new VotingPhaseController(this);
 

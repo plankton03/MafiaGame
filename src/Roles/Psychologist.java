@@ -36,7 +36,7 @@ public class Psychologist extends MainRoles{
     }
 
     public String prepareMessage(LinkedList<Player> players , Player thePlayer){
-            String message = "Please select one to silence.\n0. Nobody";
+            String message = "Please select one to silence.\n0. Nobody\n";
 
             int index =1;
             for (Player player : players){

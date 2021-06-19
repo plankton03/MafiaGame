@@ -40,6 +40,7 @@ public class GotFather extends MainRoles {
             if (player.equals(thePlayer))
                 continue;
             message += index + ". " + player.getName() + "\n";
+            index++;
         }
         return message;
     }

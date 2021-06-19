@@ -36,7 +36,10 @@ public class ChatPhaseHandler extends Thread {
                 }
                 controller.sendMessageToAll(rcv, this);
                 if (exitChat)
+                {
+                    System.out.println("for debug");
                     break;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

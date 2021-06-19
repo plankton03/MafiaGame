@@ -16,7 +16,7 @@ public class ChatPhaseController {
     private LinkedList<Player> deadPlayers;
     private boolean chatIsOver = false;
     private LinkedList<ChatPhaseHandler> chatPhaseHandlers;
-    private final long chatTime = 20 * 1000;
+    private final long chatTime = 150 * 1000;
 
     public ChatPhaseController(Game game) {
         this.game = game;
@@ -50,8 +50,6 @@ public class ChatPhaseController {
         }
     }
 
-    //Todo: implement that
-    public void startMafiaChat(){}
 
     public void sendMessageToAll(String message) throws IOException {
         for (Player player : players) {
