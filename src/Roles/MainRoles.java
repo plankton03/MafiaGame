@@ -45,7 +45,7 @@ public abstract class MainRoles implements Role {
 
 
     public boolean isValidAnswer(int answer, int startRange, int endRange) {
-        if (answer >= startRange || answer <= endRange)
+        if (answer >= startRange && answer <= endRange)
             return true;
         return false;
     }
@@ -69,10 +69,9 @@ public abstract class MainRoles implements Role {
                 if (isValidAnswer(answer, sRange, eRange)) {
                     return answer;
                 }
-            }
-            thePlayer.getWriter().writeUTF("The input entered is invalid :( Please try again ...");
+            } else
+                thePlayer.getWriter().writeUTF("The input entered is invalid :( Please try again ...");
         }
     }
-
 
 }

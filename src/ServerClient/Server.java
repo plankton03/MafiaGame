@@ -33,11 +33,11 @@ public class Server {
             }
 
 
-            System.out.println("\nStarting day and chat phase.");
-            game.startDay();
-            System.out.println("\nChat phase is over.");
+//            System.out.println("\nStarting day and chat phase.");
+//            game.startDay();
+//            System.out.println("\nChat phase is over.");
 
-//            game.startVoting();
+            game.startVoting();
 //
 
 //            int i = 0;

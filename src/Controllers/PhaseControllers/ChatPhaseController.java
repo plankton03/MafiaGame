@@ -37,6 +37,8 @@ public class ChatPhaseController {
         sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "The chat phase of the day begins. You have 5 minutes to chat." +
                 "\nIf you are ready to vote, please enter a '#' character.\n" + Color.RESET);
         for (Player player : players) {
+            if (player.getRole().isSilent())
+                continue;
             ChatPhaseHandler chatPhaseHandler = new ChatPhaseHandler(this, player);
             chatPhaseHandlers.add(chatPhaseHandler);
             chatPhaseHandler.start();
@@ -54,6 +56,11 @@ public class ChatPhaseController {
         forceFinishChat();
         sendMessageToAll(Color.CYAN_UNDERLINED + "\nThe time allotted for the chat has expired. " +
                 "You can no longer chat with other users." + Color.RESET);
+
+        for (Player player : players){
+            if (player.getRole().isSilent())
+                player.getRole().setSilent(false);
+        }
     }
 
 
@@ -83,8 +90,8 @@ public class ChatPhaseController {
         for (ChatPhaseHandler player : chatPhaseHandlers) {
             if (player.equals(thePlayer)) {
                 try {
-                    player.getThePlayer().getWriter().writeUTF(Color.WHITE_UNDERLINED + "You :"
-                            + Color.RESET +"  "+ Color.WHITE_BOLD_BRIGHT + msg + Color.RESET);
+                    player.getThePlayer().getWriter().writeUTF(Color.WHITE_UNDERLINED + "You"
+                            + Color.RESET +"   "+ Color.WHITE_BOLD_BRIGHT + msg + Color.RESET);
                 } catch (IOException e) {
                     players.remove(player);
                     sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
@@ -92,7 +99,7 @@ public class ChatPhaseController {
                 }
                 continue;
             }
-            message = Color.WHITE_UNDERLINED + thePlayer.getThePlayer().getName() + " : " + Color.RESET;
+            message = Color.WHITE_UNDERLINED + thePlayer.getThePlayer().getName()+ Color.RESET+"   ";
             message += Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
             try {
                 player.getThePlayer().getWriter().writeUTF(message);
@@ -103,7 +110,7 @@ public class ChatPhaseController {
             }
         }
         for (Player player : deadPlayers) {
-            message = Color.WHITE_UNDERLINED + thePlayer.getThePlayer().getName() + " : " + Color.RESET;
+            message = Color.WHITE_UNDERLINED + thePlayer.getThePlayer().getName()+ Color.RESET+"   ";
             message += Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
             try {
                 player.getWriter().writeUTF(message);

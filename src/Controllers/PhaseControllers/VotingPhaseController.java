@@ -3,6 +3,7 @@ package Controllers.PhaseControllers;
 import Controllers.ClientHandlers.ChatPhaseHandler;
 import Controllers.ClientHandlers.ExitHandler;
 import Controllers.ClientHandlers.VotingPhaseHandler;
+import Design.Color;
 import Game.Game;
 import Player.Player;
 import Roles.MainRoles;
@@ -26,13 +27,13 @@ public class VotingPhaseController {
     private Game game;
     private LinkedList<Player> players;
     private LinkedList<Player> deadPlayers;
-    private long voteTime;
+    //    private long voteTime;
     private LinkedList<VotingPhaseHandler> votingPhaseHandlers;
     private ConcurrentHashMap<Player, Integer> voteResults = new ConcurrentHashMap<Player, Integer>();
     private ConcurrentHashMap<Player, Player> playersVote = new ConcurrentHashMap<Player, Player>();
     ArrayList<Player> suspectedPlayer = new ArrayList<Player>();
 
-    private boolean voteIsOver = false;
+//    private boolean voteIsOver = false;
 
     public VotingPhaseController(Game game) {
         this.game = game;
@@ -47,10 +48,10 @@ public class VotingPhaseController {
 
     public void startVotingPhase() {
 
-        resetSuspended();
+        sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
 
-        sendMessageToAll("\n......................................" +
-                "\nVoting begins :)\nYou only have " + voteTime + " seconds to vote...\n\n");
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "The Voting phase of the day begins. You have 30 seconds to vote.\n" + Color.RESET);
+
 
         for (Player player : players) {
             VotingPhaseHandler votingPhaseHandler = new VotingPhaseHandler(this, player);
@@ -58,11 +59,7 @@ public class VotingPhaseController {
             votingPhaseHandler.start();
         }
 
-        try {
-            Thread.sleep(30*1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        waitForVoteEnd();
 
         reportPlayersVot();
         reportVote();  //show results and exited players
@@ -76,36 +73,52 @@ public class VotingPhaseController {
 
     public void reportResult() {
         if (suspectedPlayer.size() == 0) {
-            sendMessageToAll("None of the people had enough votes to leave the game.");
+            sendMessageToAll(Color.CYAN_BOLD_BRIGHT+"\nNone of the people had enough votes to leave the game."+Color.RESET);
         } else {
-            String message = new String();
+            String message = "\n";
 
-            for (int i =0;i<suspectedPlayer.size();i++){
-                if (i== suspectedPlayer.size() -1 ){
+            for (int i = 0; i < suspectedPlayer.size(); i++) {
+                if (i == suspectedPlayer.size() - 1) {
                     message += suspectedPlayer.get(i).getName();
                     break;
                 }
                 message += suspectedPlayer.get(i).getName() + " , ";
             }
-            sendMessageToAll(message + " died :)");
+            sendMessageToAll(Color.CYAN_BOLD_BRIGHT+message + " died :)\n"+Color.RESET);
         }
     }
+
+    public void waitForVoteEnd() {
+        try {
+            Thread.sleep(30*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+//
+//    public boolean voteIsOver() {
+//        for (VotingPhaseHandler handler : votingPhaseHandlers) {
+//            if (handler.isAlive())
+//                return false;
+//        }
+//        return true;
+//    }
 
     public boolean askMayor() {
         for (Player player : players) {
             if (player.getRole() instanceof Mayor) {
-                    int answer = ((Mayor) player.getRole()).act(player);
-                    if (answer == 1)
-                        return true;
-                    else return false;
+                int answer = ((Mayor) player.getRole()).act(player);
+                if (answer == 1)
+                    return true;
+                else return false;
             }
         }
         return false;
     }
 
-    public void resetSuspended() {
-        suspectedPlayer.clear();
-    }
+//    public void resetSuspended() {
+//        suspectedPlayer.clear();
+//    }
 
 
     public void sendMessageToAll(String message) {
@@ -134,10 +147,13 @@ public class VotingPhaseController {
             }
         }
 
+        if (suspectedPlayer.size() > 1)
+            return;
+
         for (Player player : suspectedPlayer) {
             if (players.contains(player)) {
                 try {
-                    player.getWriter().writeUTF("You are dead :(");
+                    player.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT + "You are dead :(" + Color.RESET);
                     players.remove(player);
                     deadPlayers.add(player);
                     (new ExitHandler(player, game)).start();
@@ -149,32 +165,43 @@ public class VotingPhaseController {
     }
 
     public void reportPlayersVot() {
-        sendMessageToAll("List of players and their votes.");
+
+        sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
+
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "List of players and people who voted for them.\n" + Color.RESET);
+
         for (Map.Entry<Player, Player> playerEntry : playersVote.entrySet()) {
             if (players.contains(playerEntry.getKey())) {
-                sendMessageToAll(playerEntry.getKey().getName() + " has voted for " + playerEntry.getValue().getName());
-            } else {
-                sendMessageToAll(playerEntry.getKey().getName() + " wanted to get out of the game");
+                sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "* "+playerEntry.getKey().getName() + Color.RESET
+                        + Color.CYAN_BOLD + " has voted for " + playerEntry.getValue().getName() + Color.RESET);
             }
+//            else {
+//                sendMessageToAll(+playerEntry.getKey().getName() + " wanted to get out of the game");
+//            }
         }
 
-        sendMessageToAll("\n\n\t\t\t\t.........................................");
+//        sendMessageToAll("\n\n\t\t\t\t.........................................");
     }
 
     public void reportVote() {
-        sendMessageToAll("The voting results are as follows : ");
+
+
+        sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
+
+        sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "The voting results are as follows:\n" + Color.RESET);
+
+//        sendMessageToAll("The voting results are as follows : ");
 
         for (Map.Entry<Player, Integer> player : voteResults.entrySet()) {
             if (players.contains(player.getKey())) {
-                sendMessageToAll("* " + player.getKey().getName() + " : " + player.getValue());
-            } else {
-                sendMessageToAll(player.getKey().getName() + " is out of the game ... ");
+                sendMessageToAll(Color.CYAN_BOLD + "* " + player.getKey().getName() + " : " + player.getValue() + Color.RESET);
             }
+//            else {
+//                sendMessageToAll(player.getKey().getName() + " is out of the game ... ");
+//            }
         }
-        sendMessageToAll("\n\n\t\t\t\t.........................................");
-
+//        sendMessageToAll("\n\n\t\t\t\t.........................................");
     }
-
 
 
     public Game getGame() {
@@ -209,14 +236,6 @@ public class VotingPhaseController {
         this.deadPlayers = deadPlayers;
     }
 
-    public long getVoteTime() {
-        return voteTime;
-    }
-
-    public void setVoteTime(long voteTime) {
-        this.voteTime = voteTime;
-    }
-
     public LinkedList<VotingPhaseHandler> getVotingPhaseHandlers() {
         return votingPhaseHandlers;
     }
@@ -225,11 +244,5 @@ public class VotingPhaseController {
         this.votingPhaseHandlers = votingPhaseHandlers;
     }
 
-    public boolean isVoteIsOver() {
-        return voteIsOver;
-    }
 
-    public void setVoteIsOver(boolean voteIsOver) {
-        this.voteIsOver = voteIsOver;
-    }
 }

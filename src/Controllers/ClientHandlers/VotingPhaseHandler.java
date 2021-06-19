@@ -1,6 +1,7 @@
 package Controllers.ClientHandlers;
 
 import Controllers.PhaseControllers.VotingPhaseController;
+import Design.Color;
 import Player.Player;
 
 import javax.swing.text.PlainDocument;
@@ -25,6 +26,7 @@ public class VotingPhaseHandler extends Thread {
     private Player thePlayer;
     private int answer = 0;
     private boolean end = false;
+    private long chatTime = 30 * 1000;
 
 
     public VotingPhaseHandler(VotingPhaseController controller, Player thePlayer) {
@@ -41,22 +43,30 @@ public class VotingPhaseHandler extends Thread {
         try {
             thePlayer.getWriter().writeUTF(playersListToVote());
 
-            while (true) {
-                String answer = thePlayer.getReader().readUTF();
-                if (isInteger(answer)) {
-                    this.answer = Integer.parseInt(answer);
-                    if (isValidAnswer())
-                    {
-                        matchAnswer();
-                        break;
-                    }
-                }
+            long start = System.currentTimeMillis();
+            long end = start + chatTime;
+            while (System.currentTimeMillis() < end) {
+                while (true) {
+                    String answer = thePlayer.getReader().readUTF();
+                    if (isInteger(answer)) {
 
-                thePlayer.getWriter().writeUTF("The answer you entered is not a valid answer:( Please try again.");
+//                        this.answer = Integer.parseInt(answer);
+                        if (isValidAnswer(Integer.parseInt(answer))) {
+                            if (this.answer > 0){
+                                matchAnswer(-1);
+                            }
+                            this.answer = Integer.parseInt(answer);
+                            matchAnswer(+1);
+                            thePlayer.getWriter().writeUTF(Color.CYAN_UNDERLINED+"If you wish, you can vote another."+Color.RESET);
+                        }
+                    } else
+                        thePlayer.getWriter().writeUTF(Color.WHITE_UNDERLINED+"The answer you entered is not a valid answer" +
+                                ":( Please try again."+Color.RESET);
+                }
             }
         } catch (IOException e) {
-            System.out.println("player : "+thePlayer.getName()+" disconnected");
-//            e.printStackTrace();
+            controller.getGame().getPlayers().remove(this);
+            controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT+"!!! "+thePlayer.getName()+" is out of the game."+Color.RESET);
         }
     }
 
@@ -70,16 +80,15 @@ public class VotingPhaseHandler extends Thread {
             names.add(i + ". " + player.getName());
             i++;
         }
-        String voteMessage = "Players you can vote for as Mafia\n";
+        String voteMessage = "\t"+Color.CYAN_UNDERLINED +"Players you can vote for as Mafia\n"+Color.RESET;
         for (String name : names)
-            voteMessage += name + "\n";
+            voteMessage += Color.CYAN_BOLD_BRIGHT+"\t"+name + "\n"+Color.RESET;
         return voteMessage;
     }
 
-    public void matchAnswer() {
+    public void matchAnswer(int i) {
 
         if (answer == 0) {
-//            controller.getPlayersVote().put(thePlayer, null);
             return;
         }
         ConcurrentHashMap<Player, Integer> voteResult = controller.getVoteResults();
@@ -92,14 +101,14 @@ public class VotingPhaseHandler extends Thread {
                 continue;
             if (index == answer) {
                 controller.getPlayersVote().put(thePlayer, player);
-                voteResult.put(player, voteResult.get(player) + 1);
+                voteResult.put(player, voteResult.get(player) + i);
             }
             index++;
         }
     }
 
-    public boolean isValidAnswer() {
-        if (answer >= 0 && answer <= controller.getVoteResults().size()-1)
+    public boolean isValidAnswer(int ans) {
+        if (ans >= 0 && ans <= controller.getVoteResults().size() - 1)
             return true;
         return false;
 
