@@ -26,8 +26,10 @@ public class MafiaChatHandler extends Thread {
                     "the head of the Mafia announces his readiness by sending a '#' character or takes 5 minutes."+Color.RESET);
         } catch (IOException e) {
             controller.getGame().getPlayers().remove(thePlayer);
+            controller.getChatHandlers().remove(this);
             controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + thePlayer.getName()
                     + " is out of the game." + Color.RESET);
+            return;
         }
         startListening();
     }
@@ -47,7 +49,7 @@ public class MafiaChatHandler extends Thread {
                     controller.sendMessageToAll("I made my decision", this);
                     controller.setChatIsOver(true);
                     controller.getChatHandlers().remove(this);
-                    controller.sendMessageToAll("write any text you want , or click enter to exit the game :)", this);
+                    controller.sendExitMessage("write any text you want , or click enter to exit the chat :)");
                     break;
                 }
                 controller.sendMessageToAll(rcv, this);
@@ -57,8 +59,10 @@ public class MafiaChatHandler extends Thread {
                 }
             } catch (IOException e) {
                 controller.getGame().getPlayers().remove(thePlayer);
+                controller.getChatHandlers().remove(this);
                 controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + thePlayer.getName()
                         + " is out of the game." + Color.RESET);
+                return;
             }
         }
     }

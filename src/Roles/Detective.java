@@ -13,10 +13,6 @@ public class Detective extends MainRoles{
         super("Detective");
     }
 
-    @Override
-    public String nightQuestion() {
-        return null;
-    }
 
     @Override
     public boolean isMafia() {

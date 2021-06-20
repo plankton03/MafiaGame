@@ -34,16 +34,21 @@ public class ChatPhaseHandler extends Thread {
                 else if (rcv.equals("#")) {
                     isReadyToEndChat = true;
                     rcv = "I'm ready to vote";
+                    controller.sendMessageToAll(rcv,this);
+                    return;
                 }
                 controller.sendMessageToAll(rcv, this);
                 if (exitChat)
                 {
+                    controller.getChatPhaseHandlers().remove(this);
                     break;
                 }
             } catch (IOException e) {
                 controller.getGame().getPlayers().remove(thePlayer);
+                controller.getChatPhaseHandlers().remove(this);
                 controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + thePlayer.getName()
                         + " is out of the game." + Color.RESET);
+                break;
             }
         }
     }

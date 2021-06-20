@@ -15,10 +15,6 @@ public class DrCity extends MainRoles {
         super("City Doctor");
     }
 
-    @Override
-    public String nightQuestion() {
-        return null;
-    }
 
     @Override
     public boolean isMafia() {

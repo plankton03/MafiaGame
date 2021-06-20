@@ -15,10 +15,6 @@ public class Psychologist extends MainRoles{
         super("Psychologist");
     }
 
-    @Override
-    public String nightQuestion() {
-        return null;
-    }
 
     @Override
     public boolean isMafia() {

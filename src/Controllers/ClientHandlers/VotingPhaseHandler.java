@@ -10,21 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class VotingPhaseHandler extends Thread {
 
-    //TODO  :
-    // prepare message
-    // get answer
-    // check and match answer
-    // updating list in controller
-    // end
-
-    //TODO : Vghti hazf mishe va ray dadan behesh
-
 
     private VotingPhaseController controller;
     private Player thePlayer;
     private int answer = 0;
     private boolean end = false;
-    private long chatTime = 30 * 1000;
+    private long chatTime = 10 * 1000;
 
 
     public VotingPhaseHandler(VotingPhaseController controller, Player thePlayer) {
@@ -38,55 +29,85 @@ public class VotingPhaseHandler extends Thread {
     }
 
     public void startVoting() {
-        String answer = "";
+
+        String rcv;
+//
+        boolean flag = false;
         try {
             thePlayer.getWriter().writeUTF(playersListToVote());
 
-            long start = System.currentTimeMillis();
-            long end = start + chatTime;
-            while (System.currentTimeMillis() < end) {
-                while (true) {
-                    answer = thePlayer.getReader().readUTF();
-                    if (isInteger(answer)) {
-
-//                        this.answer = Integer.parseInt(answer);
-                        if (isValidAnswer(Integer.parseInt(answer))) {
-                            if (this.answer > 0) {
-                                matchAnswer(-1);
-                            }
-                            this.answer = Integer.parseInt(answer);
-                            matchAnswer(+1);
-                            thePlayer.getWriter().writeUTF(Color.CYAN_UNDERLINED + "If you wish, you can vote another." +
-                                    Color.RESET);
-                        }
-                    } else
-                        thePlayer.getWriter().writeUTF(Color.WHITE_UNDERLINED + "The answer you entered is not a" +
-                                " valid answer" +
-                                ":( Please try again." + Color.RESET);
-                }
-            }
-            if (answer.equals("")) {
-                thePlayer.setInactive(thePlayer.getInactive() + 1);
-                if (thePlayer.getInactive() == 3) {
-                    try {
-                        thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT + "You are dead :(" + Color.RESET);
-                        controller.getPlayers().remove(thePlayer);
-                        controller.getDeadPlayers().add(thePlayer);
-                        (new ExitHandler(thePlayer, controller.getGame())).start();
-                    } catch (IOException e) {
-                        controller.getGame().getPlayers().remove(this);
-                        controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " +
-                                thePlayer.getName() + " is out of the game." + Color.RESET);
-                    }
-                }
-            }
         } catch (IOException e) {
-            controller.getGame().getPlayers().remove(this);
-            controller.sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " +
-                    thePlayer.getName() + " is out of the game." + Color.RESET);
+
+        }
+
+//        long start = System.currentTimeMillis();
+//        long end = start + chatTime;
+//        while (System.currentTimeMillis() < end) {
+//            gettingAnswer();
+//        }
+//        while ()
+//        gettingAnswer();
+
+//        while (true){
+//            gettingAnswer();
+//
+//            if (end)
+//                break;
+//        }
+
+//        int i = 0;
+//        while (i < 3) {
+//            gettingAnswer();
+//            i++;
+//            if (end)
+//            {
+//                System.out.println("in loop");
+//                break;
+//
+//            }
+//        }
+
+        while (true){
+            gettingAnswer();
+            if (end){
+                break;
+            }
+        }
+
+        matchAnswer(+1);
+    }
+
+    public Player getThePlayer() {
+        return thePlayer;
+    }
+
+    public synchronized void gettingAnswer() {
+
+        while (true) {
+            try {
+                String ans = thePlayer.getReader().readUTF();
+                if (end)
+                    return;
+                if (isInteger(ans)) {
+                    if (isValidAnswer(Integer.parseInt(ans))) {
+                        this.answer = Integer.parseInt(ans);
+                        thePlayer.getWriter().writeUTF(Color.CYAN_UNDERLINED + "If you wish, you can vote another." +
+                                Color.RESET);
+                        break;
+                    }
+                }else {
+                    thePlayer.getWriter().writeUTF(Color.CYAN + "The answer you entered is not a" +
+                            " valid answer" +
+                            ":( Please try again." + Color.RESET);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+
+    //
     public String playersListToVote() {
         ArrayList<String> names = new ArrayList<>();
         names.add("0. No Body");
@@ -122,6 +143,10 @@ public class VotingPhaseHandler extends Thread {
             }
             index++;
         }
+    }
+
+    public void setEnd(boolean end) {
+        this.end = end;
     }
 
     public boolean isValidAnswer(int ans) {

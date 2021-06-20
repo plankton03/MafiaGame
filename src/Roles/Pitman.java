@@ -14,10 +14,6 @@ public class Pitman extends MainRoles {
         super("Pitman");
     }
 
-    @Override
-    public String nightQuestion() {
-        return null;
-    }
 
     @Override
     public boolean isMafia() {

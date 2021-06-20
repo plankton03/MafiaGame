@@ -1,9 +1,7 @@
 package Game;
 
-import Controllers.PhaseControllers.ChatPhaseController;
-import Controllers.PhaseControllers.FirstNightController;
-import Controllers.PhaseControllers.NightPhaseController;
-import Controllers.PhaseControllers.VotingPhaseController;
+import Controllers.PhaseControllers.*;
+import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
@@ -49,11 +47,60 @@ public class Game {
 
     }
 
+    public boolean gameIsOver(){
+        if (getNumOfMafia() == 0 || getNumOfMafia() >= getNumOFCitizens())
+            return true;
+        return false;
+    }
+
+    public void announcingTheWinner(){
+        String name = "\n\n\t\t\t\t";
+        if (getNumOfMafia() == 0)
+            name += "Citizens";
+        else name += "Mafia group";
+        name += " are the winner of the game *_*";
+        for (Player player : players) {
+            try {
+                player.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT+name+Color.RESET);
+            } catch (IOException e) {
+                players.remove(player);
+            }
+        }
+        for (Player player : deadPlayers) {
+            try {
+                player.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT+name+Color.RESET);
+            } catch (IOException e) {
+                deadPlayers.remove(player);
+            }
+        }
+
+    }
+
+    public int getNumOFCitizens(){
+        int count = 0;
+        for (Player player : players){
+            if (!player.getRole().isMafia())
+                count++;
+        }
+        return count;
+    }
+
+    public int getNumOfMafia(){
+        int count = 0;
+        for (Player player : players){
+            if (player.getRole().isMafia())
+                count++;
+        }
+        return count;
+    }
+
     public void startDay() {
 
         ChatPhaseController chatPhaseController = new ChatPhaseController(this);
 
         chatPhaseController.startChat();
+
+        System.out.println("suc");
     }
     public void startNight() {
 
@@ -85,9 +132,21 @@ public class Game {
         return deadPlayers;
     }
 
-    public void sendToAll(String message) throws IOException {
+    public void sendToAll(String message){
         for (Player player : players) {
-            player.getWriter().writeUTF(message);
+            try {
+                player.getWriter().writeUTF(message);
+            } catch (IOException e) {
+                players.remove(player);
+            }
+        }
+
+        for (Player player : deadPlayers){
+            try {
+                player.getWriter().writeUTF(message);
+            } catch (IOException e) {
+                players.remove(player);
+            }
         }
     }
 }

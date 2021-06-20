@@ -16,12 +16,6 @@ public class Initializer {
     private Vector<String> names = new Vector<>();
 
 
-    //TODO : create roles
-    //TODO : create players
-    //TODO : match players and roles
-    //TODO : sent role messages to the players
-
-
     public Initializer(ServerSocket serverSocket, int numOfPlayers, Game game) {
         this.serverSocket = serverSocket;
         this.numOfPlayers = numOfPlayers;
@@ -61,11 +55,11 @@ public class Initializer {
 
             } else {
                 if (i == 1)
-                    roles.add(new Mayor());
+                    roles.add(new Detective());
                 else if (i == 2)
                     roles.add(new DrCity());
                 else if (i == 4)
-                    roles.add(new Detective());
+                    roles.add(new Mayor());
                 else if (i == 5)
                     roles.add(new Champion());
                 else if (i == 7)

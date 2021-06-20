@@ -22,36 +22,40 @@ public class Server {
             int numOfPlayers = getNumOfPlayers();
             Game game = new Game(serverSocket, numOfPlayers);
 
-            System.out.println("\n\nStarting first night ... ");
             game.startFirstNight();
-            System.out.println("\nThe first night is over.");
 
-            try {
-                Thread.sleep(5 * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+//            try {
+//                Thread.sleep(5 * 1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//
+//
+            while (true) {
+
+//                game.startDay();
+//
+//                game.startVoting();
+//                if (game.gameIsOver())
+//                    break;
+//
+                game.startNight();
+                if (game.gameIsOver())
+                    break;
             }
 
+            Thread.sleep(20 * 1000);
 
-//            System.out.println("\nStarting day and chat phase.");
-//            game.startDay();
-//            System.out.println("\nChat phase is over.");
-
-//            game.startVoting();
+            game.announcingTheWinner();
+//
+            game.sendToAll("Exit");
 //
 
-            int i = 0;
-            while (i < 5) {
-
-                game.startNight();
-                i++;
-            }
-            System.out.println("Exot");
-
-            game.sendToAll("Exit");
-
-
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

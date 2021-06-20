@@ -27,23 +27,10 @@ public abstract class MainRoles implements Role {
         isSilent = silent;
     }
 
-    public int getNightChoice() {
-        return nightChoice;
-    }
-
-    public void setNightChoice(int nightChoice) {
-        this.nightChoice = nightChoice;
-    }
-
-    public abstract String nightQuestion();
-
     @Override
     public String getRole() {
         return role;
     }
-
-//    public abstract int act( Player thePlayer);
-
 
     public boolean isValidAnswer(int answer, int startRange, int endRange) {
         if (answer >= startRange && answer <= endRange)
