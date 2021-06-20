@@ -1,6 +1,5 @@
 package Controllers.PhaseControllers;
 
-import Controllers.ClientHandlers.ChatPhaseHandler;
 import Controllers.ClientHandlers.ExitHandler;
 import Controllers.ClientHandlers.MafiaChatHandler;
 import Design.Color;
@@ -10,9 +9,9 @@ import Roles.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class NightPhaseController {
 
@@ -22,7 +21,6 @@ public class NightPhaseController {
     private LinkedList<Player> deadPlayers;
     private ArrayList<Player> mafiaPlayers;
     private ArrayList<MafiaChatHandler> chatHandlers = new ArrayList<>();
-    //    private boolean chatIsOver ;
     private HashMap<Role, Integer> answers;
     private long chatTime = 5 * 60 * 1000;
     private boolean inquiry = false;
@@ -62,19 +60,15 @@ public class NightPhaseController {
 
         sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "The night begins.\n" + Color.RESET);
 
-//        reset();
 
-//        sendMessageToAll("Starting night ...");
         startMafiaChat();
-//
-//        System.out.println("Ending chat");
+
         askQuestions();
 
         applyResults();
 
-//        sendMessageToAll("Night events ... ");
-
         removeDeadPlayers();
+
         reportNightEvents();
 
     }
@@ -131,6 +125,7 @@ public class NightPhaseController {
                     players.remove(player);
 //                    deadPlayers.add(player);
                     (new ExitHandler(player, game)).start();
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     game.getPlayers().remove(player);
                     sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
@@ -166,6 +161,7 @@ public class NightPhaseController {
                         player.getWriter().writeUTF(Color.PURPLE + "\t\t* Citizen" + Color.RESET);
                     else
                         player.getWriter().writeUTF(Color.PURPLE + "\t\t* Mafia" + Color.RESET);
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName() + " is out of the game.");
                     players.remove(player);
@@ -177,10 +173,12 @@ public class NightPhaseController {
 
         for (Player player : players) {
             if (player.getRole() instanceof DrLector || player.getRole() instanceof DrCity) {
-                if (answers.get(player.getRole())-1 == 0)
+                if (!answers.containsKey(player.getRole()))
                     continue;
-                if (deadPlayersAtNight.contains(players.get(answers.get(player.getRole()) - 1)))
-                    deadPlayersAtNight.remove(players.get(answers.get(player.getRole()) - 1));
+                if (answers.get(player.getRole()) == 0)
+                    continue;
+//                if (deadPlayersAtNight.contains(players.get(answers.get(player.getRole()) - 1)))
+                deadPlayersAtNight.remove(players.get(answers.get(player.getRole()) - 1));
             }
         }
     }
@@ -235,6 +233,7 @@ public class NightPhaseController {
         for (Player player : players) {
             try {
                 player.getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
             } catch (IOException e) {
                 game.getPlayers().remove(player);
                 sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
@@ -244,6 +243,7 @@ public class NightPhaseController {
         for (Player player : game.getDeadPlayers()) {
             try {
                 player.getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
             } catch (IOException e) {
                 deadPlayers.remove(player);
             }
@@ -257,6 +257,7 @@ public class NightPhaseController {
                 try {
                     player.getThePlayer().getWriter().writeUTF(Color.WHITE_UNDERLINED + "You" + Color.RESET +
                             "   " + Color.WHITE_BOLD_BRIGHT + msg + Color.RESET);
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     game.getPlayers().remove(player.getThePlayer());
                     chatHandlers.remove(player);
@@ -268,6 +269,7 @@ public class NightPhaseController {
                         + Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
                 try {
                     player.getThePlayer().getWriter().writeUTF(message);
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     getGame().getPlayers().remove(player.getThePlayer());
                     chatHandlers.remove(player);
@@ -276,15 +278,6 @@ public class NightPhaseController {
                 }
             }
         }
-//        for (Player player : deadPlayers) {
-//            message = Color.WHITE_UNDERLINED + handler.getThePlayer().getName() + Color.RESET + "   "
-//                    + Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
-//            try {
-//                player.getWriter().writeUTF(message);
-//            } catch (IOException e) {
-//                deadPlayers.remove(player);
-//            }
-//        }
     }
 
     public synchronized void setChatIsOver(boolean chatIsOver) {
@@ -318,6 +311,7 @@ public class NightPhaseController {
             if (handler.isAlive()) {
                 try {
                     handler.getThePlayer().getWriter().writeUTF(Color.CYAN_UNDERLINED + message + Color.RESET);
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     getGame().getPlayers().remove(handler.getThePlayer());
                     chatHandlers.remove(handler);
@@ -331,7 +325,7 @@ public class NightPhaseController {
     public void askLectorDr() {
         for (Player player : players) {
             if (player.getRole() instanceof DrLector) {
-                int answer = ((DrLector) player.getRole()).act(player,mafiaPlayers, players);
+                int answer = ((DrLector) player.getRole()).act(player, mafiaPlayers, players);
                 answers.put(player.getRole(), answer);
                 return;
             }

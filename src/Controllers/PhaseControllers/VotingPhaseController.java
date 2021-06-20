@@ -9,6 +9,7 @@ import Roles.Mayor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VotingPhaseController {
 
 
+    private int voteTime = 5;
     private Game game;
     private LinkedList<Player> players;
     private LinkedList<Player> deadPlayers;
@@ -50,7 +52,7 @@ public class VotingPhaseController {
         }
 
         try {
-            Thread.sleep(30 * 1000);
+            Thread.sleep(voteTime * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -81,7 +83,7 @@ public class VotingPhaseController {
     }
 
     public void reportResult() {
-        if (suspectedPlayer.size() == 0) {
+        if (suspectedPlayer.size() == 0 || suspectedPlayer.size() > 1) {
             sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "\nNone of the people had enough votes to leave the game." + Color.RESET);
         } else {
             String message = "\n";
@@ -144,7 +146,7 @@ public class VotingPhaseController {
         for (VotingPhaseHandler handler : votingPhaseHandlers) {
             if (handler.isAlive()) {
                 try {
-                    handler.getThePlayer().getWriter().writeUTF(Color.CYAN_UNDERLINED+"write any text you want" +
+                    handler.getThePlayer().getWriter().writeUTF(Color.CYAN_UNDERLINED + "write any text you want" +
                             " , or click enter to exit the voting phase :)" + Color.RESET);
                 } catch (IOException e) {
                     players.remove(handler.getThePlayer());
@@ -159,6 +161,8 @@ public class VotingPhaseController {
         for (Player player : players) {
             try {
                 player.getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
+
             } catch (IOException e) {
                 players.remove(player);
                 sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
@@ -168,12 +172,15 @@ public class VotingPhaseController {
         for (Player player : deadPlayers) {
             try {
                 player.getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
+
             } catch (IOException e) {
                 deadPlayers.remove(player);
                 sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
                         + " is out of the game." + Color.RESET);
             }
         }
+
     }
 
     public int findMax() {
@@ -206,6 +213,7 @@ public class VotingPhaseController {
                     players.remove(player);
                     deadPlayers.add(player);
                     (new ExitHandler(player, game)).start();
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     players.remove(player);
                     sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()

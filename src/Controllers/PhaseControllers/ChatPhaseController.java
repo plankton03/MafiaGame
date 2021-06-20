@@ -7,6 +7,7 @@ import Game.Game;
 import Player.Player;
 
 import java.io.IOException;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 
 public class ChatPhaseController {
@@ -78,6 +79,7 @@ public class ChatPhaseController {
             if (handler.isAlive()) {
                 try {
                     handler.getThePlayer().getWriter().writeUTF(message);
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     players.remove(handler.getThePlayer());
                     sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + handler.getThePlayer().getName()
@@ -91,6 +93,7 @@ public class ChatPhaseController {
         for (Player player : players) {
             try {
                 player.getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
             } catch (IOException e) {
                 players.remove(player);
                 sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
@@ -100,6 +103,7 @@ public class ChatPhaseController {
         for (Player player : deadPlayers) {
             try {
                 player.getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
             } catch (IOException e) {
                 players.remove(player);
                 sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()
@@ -115,6 +119,7 @@ public class ChatPhaseController {
                 try {
                     player.getThePlayer().getWriter().writeUTF(Color.WHITE_UNDERLINED + "You"
                             + Color.RESET +"   "+ Color.WHITE_BOLD_BRIGHT + msg + Color.RESET);
+                } catch (ConcurrentModificationException c) {
                 } catch (IOException e) {
                     players.remove(player.getThePlayer());
                     chatPhaseHandlers.remove(player);
@@ -127,6 +132,7 @@ public class ChatPhaseController {
             message += Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
             try {
                 player.getThePlayer().getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
             } catch (IOException e) {
                 players.remove(player.getThePlayer());
                 chatPhaseHandlers.remove(player);
@@ -139,6 +145,7 @@ public class ChatPhaseController {
             message += Color.WHITE_BOLD_BRIGHT + msg + Color.RESET;
             try {
                 player.getWriter().writeUTF(message);
+            } catch (ConcurrentModificationException c) {
             } catch (IOException e) {
                 players.remove(player);
                 sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "!!! " + player.getName()

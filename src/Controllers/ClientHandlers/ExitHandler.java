@@ -10,7 +10,6 @@ public class ExitHandler extends Thread{
 
     private Player thePlayer;
     private Game game;
-//    private int answer;
 
     public ExitHandler(Player thePlayer, Game game) {
         this.thePlayer = thePlayer;

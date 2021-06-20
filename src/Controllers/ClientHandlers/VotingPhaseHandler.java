@@ -101,7 +101,7 @@ public class VotingPhaseHandler extends Thread {
                             ":( Please try again." + Color.RESET);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                break;
             }
         }
     }

@@ -35,18 +35,18 @@ public class Server {
 //
             while (true) {
 
-//                game.startDay();
-//
-//                game.startVoting();
-//                if (game.gameIsOver())
-//                    break;
+                game.startDay();
+
+                game.startVoting();
+                if (game.gameIsOver())
+                    break;
 //
                 game.startNight();
                 if (game.gameIsOver())
                     break;
             }
 
-            Thread.sleep(20 * 1000);
+            Thread.sleep(5 * 1000);
 
             game.announcingTheWinner();
 //
