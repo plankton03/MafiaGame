@@ -25,24 +25,28 @@ public class ExitHandler extends Thread{
             thePlayer.getWriter().writeUTF(Color.PURPLE+"1. Watch the rest of the game\n2. Exit"+Color.RESET);
 
             while (true){
-                String ans = thePlayer.getReader().readUTF();
-                if (isInteger(ans) && isValidAnswer(Integer.parseInt(ans))){
-                    int answer =Integer.parseInt(ans);
-                    if (answer == 1){
-                        game.getDeadPlayers().add(thePlayer);
-                        break;
+                try {
+                    String ans = thePlayer.getReader().readUTF();
+                    if (isInteger(ans) && isValidAnswer(Integer.parseInt(ans))){
+                        int answer =Integer.parseInt(ans);
+                        if (answer == 1){
+                            game.getDeadPlayers().add(thePlayer);
+                            break;
 
+                        }
+                        else
+                        {
+                            thePlayer.getWriter().writeUTF("Exit");
+                            break;
+                        }
                     }
-                    else
-                    {
-//                        game.getDeadPlayers().remove(thePlayer);
-                        thePlayer.getWriter().writeUTF("Exit");
-                        break;
-                    }
+                }catch (IOException e){
+                    thePlayer.getWriter().writeUTF("Exit");
+                    break;
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            return;
         }
     }
 

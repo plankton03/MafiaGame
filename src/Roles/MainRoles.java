@@ -67,9 +67,9 @@ public abstract class MainRoles implements Role {
                     thePlayer.getWriter().writeUTF(Color.PURPLE_UNDERLINED +
                             "The input entered is invalid :( Please try again ..." + Color.RESET);
                 }
-
             }catch (IOException e){
                 System.out.println(thePlayer.getName()+" can't answer.");
+                return 0;
             }
         }
     }
