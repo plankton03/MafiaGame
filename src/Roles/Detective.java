@@ -7,8 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Detective extends MainRoles{
+/**
+ * The type Detective.
+ *
+ * @author : Fatemeh Abdi
+ */
+public class Detective extends MainRoles {
 
+    /**
+     * Instantiates a new Detective.
+     */
     public Detective() {
         super("Detective");
     }
@@ -19,24 +27,38 @@ public class Detective extends MainRoles{
         return false;
     }
 
-    public int act(LinkedList<Player> players, Player thePlayer){
+    /**
+     * Act int.
+     *
+     * @param players   the players
+     * @param thePlayer the the player
+     * @return the int
+     */
+    public int act(LinkedList<Player> players, Player thePlayer) {
 
         try {
-            thePlayer.getWriter().writeUTF(prepareMessage(players,thePlayer));
-            return getAnswer(thePlayer,1,players.size()-1);
+            thePlayer.getWriter().writeUTF(prepareMessage(players, thePlayer));
+            return getAnswer(thePlayer, 1, players.size() - 1);
         } catch (IOException e) {
             return 0;
         }
     }
 
-    public String prepareMessage(LinkedList<Player> players , Player thePlayer){
-        String message = "\n\n"+Color.PURPLE_UNDERLINED + "Please select one of the people to query.\n"+Color.RESET;
+    /**
+     * Prepare message string.
+     *
+     * @param players   the players
+     * @param thePlayer the the player
+     * @return the string
+     */
+    public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
+        String message = "\n\n" + Color.PURPLE_UNDERLINED + "Please select one of the people to query.\n" + Color.RESET;
 
-        int index =1;
-        for (Player player : players){
+        int index = 1;
+        for (Player player : players) {
             if (player.equals(thePlayer))
                 continue;
-            message+= Color.PURPLE+index + ". "+player.getName()+"\n"+Color.RESET;
+            message += Color.PURPLE + index + ". " + player.getName() + "\n" + Color.RESET;
             index++;
         }
         return message;

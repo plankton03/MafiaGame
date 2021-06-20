@@ -8,8 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * The type Got father.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class GotFather extends MainRoles {
 
+    /**
+     * Instantiates a new Got father.
+     */
     public GotFather() {
         super("GotFather");
     }
@@ -19,6 +27,13 @@ public class GotFather extends MainRoles {
         return true;
     }
 
+    /**
+     * Act int.
+     *
+     * @param players   the players
+     * @param thePlayer the the player
+     * @return the int
+     */
     public int act(LinkedList<Player> players, Player thePlayer) {
         try {
             thePlayer.getWriter().writeUTF(prepareMessage(players, thePlayer));
@@ -29,14 +44,21 @@ public class GotFather extends MainRoles {
 
     }
 
+    /**
+     * Prepare message string.
+     *
+     * @param players   the players
+     * @param thePlayer the the player
+     * @return the string
+     */
     public String prepareMessage(LinkedList<Player> players, Player thePlayer) {
-        String message ="\n\n"+ Color.PURPLE_UNDERLINED + "Please select the victim of the night\n"+Color.RESET;
+        String message = "\n\n" + Color.PURPLE_UNDERLINED + "Please select the victim of the night\n" + Color.RESET;
         int index = 1;
 
         for (Player player : players) {
             if (player.equals(thePlayer))
                 continue;
-            message += Color.PURPLE+index + ". " + player.getName() + "\n"+Color.RESET;
+            message += Color.PURPLE + index + ". " + player.getName() + "\n" + Color.RESET;
             index++;
         }
         return message;

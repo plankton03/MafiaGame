@@ -8,12 +8,23 @@ import Roles.GotFather;
 
 import java.io.IOException;
 
+/**
+ * The type Mafia chat handler.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class MafiaChatHandler extends Thread {
     private NightPhaseController controller;
     private Player thePlayer;
     private boolean exitChat = false;
 
 
+    /**
+     * Instantiates a new Mafia chat handler.
+     *
+     * @param controller the controller
+     * @param thePlayer  the the player
+     */
     public MafiaChatHandler(NightPhaseController controller, Player thePlayer) {
         this.controller = controller;
         this.thePlayer = thePlayer;
@@ -22,8 +33,8 @@ public class MafiaChatHandler extends Thread {
     @Override
     public void run() {
         try {
-            thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT+"\nMafia members chat starts. This chat lasts until " +
-                    "the head of the Mafia announces his readiness by sending a '#' character or takes 5 minutes."+Color.RESET);
+            thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT + "\nMafia members chat starts. This chat lasts until " +
+                    "the head of the Mafia announces his readiness by sending a '#' character or takes 5 minutes." + Color.RESET);
         } catch (IOException e) {
             controller.getGame().getPlayers().remove(thePlayer);
             controller.getChatHandlers().remove(this);
@@ -34,6 +45,9 @@ public class MafiaChatHandler extends Thread {
         startListening();
     }
 
+    /**
+     * Start listening.
+     */
     public void startListening() {
 
         String rcv;
@@ -54,7 +68,7 @@ public class MafiaChatHandler extends Thread {
                 }
                 controller.sendMessageToAll(rcv, this);
                 if (exitChat) {
-                    thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT+"The consultation of Mafia members is over."+Color.RESET);
+                    thePlayer.getWriter().writeUTF(Color.CYAN_BOLD_BRIGHT + "The consultation of Mafia members is over." + Color.RESET);
                     break;
                 }
             } catch (IOException e) {
@@ -68,10 +82,20 @@ public class MafiaChatHandler extends Thread {
     }
 
 
+    /**
+     * Sets exit chat.
+     *
+     * @param exitChat the exit chat
+     */
     public void setExitChat(boolean exitChat) {
         this.exitChat = exitChat;
     }
 
+    /**
+     * Gets the player.
+     *
+     * @return the the player
+     */
     public Player getThePlayer() {
         return thePlayer;
     }

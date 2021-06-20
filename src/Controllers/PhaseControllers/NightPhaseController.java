@@ -13,6 +13,11 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**
+ * The type Night phase controller.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class NightPhaseController {
 
 
@@ -26,12 +31,22 @@ public class NightPhaseController {
     private boolean inquiry = false;
 
 
+    /**
+     * Gets game.
+     *
+     * @return the game
+     */
     public Game getGame() {
         return game;
     }
 
     private ArrayList<Player> deadPlayersAtNight;
 
+    /**
+     * Instantiates a new Night phase controller.
+     *
+     * @param game the game
+     */
     public NightPhaseController(Game game) {
         this.game = game;
         players = game.getPlayers();
@@ -48,11 +63,19 @@ public class NightPhaseController {
         deadPlayersAtNight = new ArrayList<Player>();
     }
 
+    /**
+     * Gets mafia players.
+     *
+     * @return the mafia players
+     */
     public ArrayList<Player> getMafiaPlayers() {
         return mafiaPlayers;
     }
 
 
+    /**
+     * Start night events.
+     */
     public void startNightEvents() {
 
 
@@ -73,6 +96,9 @@ public class NightPhaseController {
 
     }
 
+    /**
+     * Report night events.
+     */
     public void reportNightEvents() {
         sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
 
@@ -98,6 +124,9 @@ public class NightPhaseController {
         reportSilence();
     }
 
+    /**
+     * Report silence.
+     */
     public void reportSilence() {
         for (Player player : players) {
             if (player.getRole().isSilent())
@@ -105,6 +134,9 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Report roles.
+     */
     public void reportRoles() {
         String message = "\t";
         for (Player player : game.getBackupList()) {
@@ -115,6 +147,9 @@ public class NightPhaseController {
         sendMessageToAll(Color.CYAN_BOLD_BRIGHT + message + Color.RESET);
     }
 
+    /**
+     * Remove dead players.
+     */
     public void removeDeadPlayers() {
         if (deadPlayersAtNight.size() == 0)
             return;
@@ -135,6 +170,9 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Apply results.
+     */
     public void applyResults() {
 
         for (Player player : players) {
@@ -183,6 +221,13 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Match answers player.
+     *
+     * @param answer    the answer
+     * @param thePlayer the the player
+     * @return the player
+     */
     public Player matchAnswers(int answer, Player thePlayer) {
         int index = 1;
         for (Player player : players) {
@@ -196,6 +241,9 @@ public class NightPhaseController {
         return null;
     }
 
+    /**
+     * Start mafia chat.
+     */
     public void startMafiaChat() {
 
         for (Player player : mafiaPlayers) {
@@ -212,13 +260,18 @@ public class NightPhaseController {
                 break;
             }
             try {
-                Thread.sleep(2*1000);
+                Thread.sleep(2 * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * Chat is over boolean.
+     *
+     * @return the boolean
+     */
     public boolean chatIsOver() {
         if (chatHandlers.size() == 0)
             return true;
@@ -230,10 +283,20 @@ public class NightPhaseController {
     }
 
 
+    /**
+     * Gets chat handlers.
+     *
+     * @return the chat handlers
+     */
     public ArrayList<MafiaChatHandler> getChatHandlers() {
         return chatHandlers;
     }
 
+    /**
+     * Send message to all.
+     *
+     * @param message the message
+     */
     public void sendMessageToAll(String message) {
         for (Player player : players) {
             try {
@@ -255,6 +318,12 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Send message to all.
+     *
+     * @param msg     the msg
+     * @param handler the handler
+     */
     public void sendMessageToAll(String msg, MafiaChatHandler handler) {
         String message;
         for (MafiaChatHandler player : chatHandlers) {
@@ -285,12 +354,20 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Sets chat is over.
+     *
+     * @param chatIsOver the chat is over
+     */
     public synchronized void setChatIsOver(boolean chatIsOver) {
         for (MafiaChatHandler handler : chatHandlers) {
             handler.setExitChat(true);
         }
     }
 
+    /**
+     * Ask questions.
+     */
     public void askQuestions() {
         askGotFather();
         askLectorDr();
@@ -301,6 +378,9 @@ public class NightPhaseController {
         askPitman();
     }
 
+    /**
+     * Ask got father.
+     */
     public void askGotFather() {
         for (Player player : players) {
             if (player.getRole() instanceof GotFather) {
@@ -311,6 +391,11 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Send exit message.
+     *
+     * @param message the message
+     */
     public void sendExitMessage(String message) {
         for (MafiaChatHandler handler : chatHandlers) {
             if (handler.isAlive()) {
@@ -327,6 +412,9 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Ask lector dr.
+     */
     public void askLectorDr() {
         for (Player player : players) {
             if (player.getRole() instanceof DrLector) {
@@ -338,6 +426,9 @@ public class NightPhaseController {
     }
 
 
+    /**
+     * Ask city dr.
+     */
     public void askCityDr() {
         for (Player player : players) {
             if (player.getRole() instanceof DrCity) {
@@ -348,6 +439,9 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Ask detective.
+     */
     public void askDetective() {
         for (Player player : players) {
             if (player.getRole() instanceof Detective) {
@@ -358,6 +452,9 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Ask champion.
+     */
     public void askChampion() {
         for (Player player : players) {
             if (player.getRole() instanceof Champion) {
@@ -368,6 +465,9 @@ public class NightPhaseController {
         }
     }
 
+    /**
+     * Ask psychologist.
+     */
     public void askPsychologist() {
         for (Player player : players) {
             if (player.getRole() instanceof Psychologist) {
@@ -379,6 +479,9 @@ public class NightPhaseController {
     }
 
 
+    /**
+     * Ask pitman.
+     */
     public void askPitman() {
         for (Player player : players) {
             if (player.getRole() instanceof Pitman) {

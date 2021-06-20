@@ -1,8 +1,16 @@
 package Roles;
 
-public class SimCitizen extends SimRoles{
+/**
+ * The type Sim citizen.
+ *
+ * @author : Fatemeh Abdi
+ */
+public class SimCitizen extends SimRoles {
 
 
+    /**
+     * Instantiates a new Sim citizen.
+     */
     public SimCitizen() {
         super("Simple Citizen");
     }

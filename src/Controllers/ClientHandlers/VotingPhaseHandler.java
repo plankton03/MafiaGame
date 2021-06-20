@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The type Voting phase handler.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class VotingPhaseHandler extends Thread {
 
 
@@ -19,6 +24,12 @@ public class VotingPhaseHandler extends Thread {
     private boolean hasActivity = false;
 
 
+    /**
+     * Instantiates a new Voting phase handler.
+     *
+     * @param controller the controller
+     * @param thePlayer  the the player
+     */
     public VotingPhaseHandler(VotingPhaseController controller, Player thePlayer) {
         this.controller = controller;
         this.thePlayer = thePlayer;
@@ -29,6 +40,9 @@ public class VotingPhaseHandler extends Thread {
         startVoting();
     }
 
+    /**
+     * Start voting.
+     */
     public void startVoting() {
 
         String rcv;
@@ -57,10 +71,18 @@ public class VotingPhaseHandler extends Thread {
         }
     }
 
+    /**
+     * Gets the player.
+     *
+     * @return the the player
+     */
     public Player getThePlayer() {
         return thePlayer;
     }
 
+    /**
+     * Gets answer.
+     */
     public synchronized void gettingAnswer() {
         while (true) {
             try {
@@ -92,7 +114,12 @@ public class VotingPhaseHandler extends Thread {
     }
 
 
-    //
+    /**
+     * Players list to vote string.
+     *
+     * @return the string
+     */
+//
     public String playersListToVote() {
         ArrayList<String> names = new ArrayList<>();
         names.add("0. No Body");
@@ -109,6 +136,11 @@ public class VotingPhaseHandler extends Thread {
         return voteMessage;
     }
 
+    /**
+     * Match answer.
+     *
+     * @param i the
+     */
     public void matchAnswer(int i) {
 
         if (answer == 0) {
@@ -130,10 +162,21 @@ public class VotingPhaseHandler extends Thread {
         }
     }
 
+    /**
+     * Sets end.
+     *
+     * @param end the end
+     */
     public void setEnd(boolean end) {
         this.end = end;
     }
 
+    /**
+     * Is valid answer boolean.
+     *
+     * @param ans the ans
+     * @return the boolean
+     */
     public boolean isValidAnswer(int ans) {
         if (ans >= 0 && ans <= controller.getVoteResults().size() - 1)
             return true;
@@ -141,6 +184,12 @@ public class VotingPhaseHandler extends Thread {
 
     }
 
+    /**
+     * chacks that string is an integer
+     *
+     * @param s the s
+     * @return the boolean
+     */
     public static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);

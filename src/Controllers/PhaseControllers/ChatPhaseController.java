@@ -10,6 +10,11 @@ import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 
+/**
+ * The type Chat phase controller.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class ChatPhaseController {
 
     private Game game;
@@ -19,6 +24,11 @@ public class ChatPhaseController {
     private LinkedList<ChatPhaseHandler> chatPhaseHandlers;
     private final long chatTime = 150 * 1000;
 
+    /**
+     * Instantiates a new Chat phase controller.
+     *
+     * @param game the game
+     */
     public ChatPhaseController(Game game) {
         this.game = game;
         players = game.getPlayers();
@@ -26,10 +36,18 @@ public class ChatPhaseController {
         chatPhaseHandlers = new LinkedList<>();
     }
 
+    /**
+     * Gets game.
+     *
+     * @return the game
+     */
     public Game getGame() {
         return game;
     }
 
+    /**
+     * Start chat.
+     */
     public void startChat() {
 
         sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
@@ -74,6 +92,11 @@ public class ChatPhaseController {
         }
     }
 
+    /**
+     * Send exit message.
+     *
+     * @param message the message
+     */
     public void sendExitMessage(String message) {
         for (ChatPhaseHandler handler : chatPhaseHandlers) {
             if (handler.isAlive()) {
@@ -89,6 +112,11 @@ public class ChatPhaseController {
         }
     }
 
+    /**
+     * Send message to all.
+     *
+     * @param message the message
+     */
     public void sendMessageToAll(String message) {
         for (Player player : players) {
             try {
@@ -112,6 +140,12 @@ public class ChatPhaseController {
         }
     }
 
+    /**
+     * Send message to all.
+     *
+     * @param msg       the msg
+     * @param thePlayer the the player
+     */
     public void sendMessageToAll(String msg, ChatPhaseHandler thePlayer){
         String message;
         for (ChatPhaseHandler player : chatPhaseHandlers) {
@@ -154,16 +188,29 @@ public class ChatPhaseController {
         }
     }
 
+    /**
+     * Gets chat phase handlers.
+     *
+     * @return the chat phase handlers
+     */
     public LinkedList<ChatPhaseHandler> getChatPhaseHandlers() {
         return chatPhaseHandlers;
     }
 
+    /**
+     * Force finish chat.
+     */
     public void forceFinishChat() {
         for (ChatPhaseHandler chatPhaseHandler : chatPhaseHandlers) {
             chatPhaseHandler.setExitChat(true);
         }
     }
 
+    /**
+     * All are ready to exit chat boolean.
+     *
+     * @return the boolean
+     */
     public boolean allAreReadyToExitChat() {
         for (ChatPhaseHandler chatPhaseHandler : chatPhaseHandlers) {
             if (!chatPhaseHandler.isReadyToEndChat())

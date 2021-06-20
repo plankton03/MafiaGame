@@ -14,6 +14,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The type Voting phase controller.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class VotingPhaseController {
 
 
@@ -24,9 +29,17 @@ public class VotingPhaseController {
     private LinkedList<VotingPhaseHandler> votingPhaseHandlers;
     private ConcurrentHashMap<Player, Integer> voteResults = new ConcurrentHashMap<Player, Integer>();
     private ConcurrentHashMap<Player, Player> playersVote = new ConcurrentHashMap<Player, Player>();
+    /**
+     * The Suspected player.
+     */
     ArrayList<Player> suspectedPlayer = new ArrayList<Player>();
 
 
+    /**
+     * Instantiates a new Voting phase controller.
+     *
+     * @param game the game
+     */
     public VotingPhaseController(Game game) {
         this.game = game;
         players = game.getPlayers();
@@ -38,6 +51,9 @@ public class VotingPhaseController {
     }
 
 
+    /**
+     * Start voting phase.
+     */
     public void startVotingPhase() {
 
         sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
@@ -83,6 +99,9 @@ public class VotingPhaseController {
 
     }
 
+    /**
+     * Remove inactive.
+     */
     public void removeInactive() {
         for (Player player : players) {
             if (player.getInactive() == 3) {
@@ -97,6 +116,9 @@ public class VotingPhaseController {
         }
     }
 
+    /**
+     * Report result.
+     */
     public void reportResult() {
         if (suspectedPlayer.size() == 0 || suspectedPlayer.size() > 1) {
             sendMessageToAll(Color.CYAN_BOLD_BRIGHT + "\nNone of the people had enough votes to leave the game." + Color.RESET);
@@ -114,6 +136,9 @@ public class VotingPhaseController {
         }
     }
 
+    /**
+     * Wait for vote end.
+     */
     public void waitForVoteEnd() {
         while (true) {
             if (voteIsDone()) {
@@ -135,6 +160,11 @@ public class VotingPhaseController {
 
     }
 
+    /**
+     * Vote is done boolean.
+     *
+     * @return the boolean
+     */
     public boolean voteIsDone() {
         if (votingPhaseHandlers == null)
             return true;
@@ -145,6 +175,11 @@ public class VotingPhaseController {
         return true;
     }
 
+    /**
+     * Ask mayor boolean.
+     *
+     * @return the boolean
+     */
     public boolean askMayor() {
         for (Player player : players) {
             if (player.getRole() instanceof Mayor) {
@@ -157,6 +192,9 @@ public class VotingPhaseController {
         return false;
     }
 
+    /**
+     * Send exit message.
+     */
     public void sendExitMessage() {
         for (VotingPhaseHandler handler : votingPhaseHandlers) {
             if (handler.isAlive()) {
@@ -172,6 +210,11 @@ public class VotingPhaseController {
         }
     }
 
+    /**
+     * Send message to all.
+     *
+     * @param message the message
+     */
     public void sendMessageToAll(String message) {
         for (Player player : players) {
             try {
@@ -198,6 +241,11 @@ public class VotingPhaseController {
 
     }
 
+    /**
+     * Find max int.
+     *
+     * @return the int
+     */
     public int findMax() {
         int max = 0;
         for (Map.Entry<Player, Integer> player : voteResults.entrySet()) {
@@ -208,6 +256,9 @@ public class VotingPhaseController {
         return max;
     }
 
+    /**
+     * Announcement of voting results.
+     */
     public void announcementOfVotingResults() {
         int max = findMax();
         if (max == 0)
@@ -238,6 +289,9 @@ public class VotingPhaseController {
         }
     }
 
+    /**
+     * Report players vot.
+     */
     public void reportPlayersVot() {
 
         sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
@@ -256,6 +310,9 @@ public class VotingPhaseController {
 
     }
 
+    /**
+     * Report vote.
+     */
     public void reportVote() {
 
 
@@ -275,38 +332,81 @@ public class VotingPhaseController {
     }
 
 
+    /**
+     * Gets game.
+     *
+     * @return the game
+     */
     public Game getGame() {
         return game;
     }
 
+    /**
+     * Sets game.
+     *
+     * @param game the game
+     */
     public void setGame(Game game) {
         this.game = game;
     }
 
+    /**
+     * Gets vote results.
+     *
+     * @return the vote results
+     */
     public ConcurrentHashMap<Player, Integer> getVoteResults() {
         return voteResults;
     }
 
+    /**
+     * Gets players.
+     *
+     * @return the players
+     */
     public LinkedList<Player> getPlayers() {
         return players;
     }
 
+    /**
+     * Sets players.
+     *
+     * @param players the players
+     */
     public void setPlayers(LinkedList<Player> players) {
         this.players = players;
     }
 
+    /**
+     * Gets dead players.
+     *
+     * @return the dead players
+     */
     public LinkedList<Player> getDeadPlayers() {
         return deadPlayers;
     }
 
+    /**
+     * Gets players vote.
+     *
+     * @return the players vote
+     */
     public ConcurrentHashMap<Player, Player> getPlayersVote() {
         return playersVote;
     }
 
+    /**
+     * Gets voting phase handlers.
+     *
+     * @return the voting phase handlers
+     */
     public LinkedList<VotingPhaseHandler> getVotingPhaseHandlers() {
         return votingPhaseHandlers;
     }
 
+    /**
+     * Force finish vot.
+     */
     public void forceFinishVot() {
         for (VotingPhaseHandler handler : votingPhaseHandlers) {
             handler.setEnd(true);

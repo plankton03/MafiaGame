@@ -1,11 +1,39 @@
 package Roles;
 
+/**
+ * The interface Role.
+ *
+ * @author : Fatemeh Abdi
+ */
 public interface Role{
 //    private boolean isReadyToEnd
 
+    /**
+     * Is mafia boolean.
+     *
+     * @return the boolean
+     */
     boolean isMafia();
+
+    /**
+     * Is silent boolean.
+     *
+     * @return the boolean
+     */
     boolean isSilent();
+
+    /**
+     * Gets role.
+     *
+     * @return the role
+     */
     String getRole();
+
+    /**
+     * Sets silent.
+     *
+     * @param silent the silent
+     */
     void setSilent(boolean silent);
 
     // TODO : 1. act dare

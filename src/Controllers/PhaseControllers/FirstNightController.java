@@ -8,18 +8,31 @@ import Player.Player;
 import java.io.IOException;
 import java.util.LinkedList;
 
+/**
+ * The type First night controller.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class FirstNightController {
 
     private Game game;
     private LinkedList<Player> players;
     private LinkedList<FirstNightHandler> firstNightHandlers;
 
+    /**
+     * Instantiates a new First night controller.
+     *
+     * @param game the game
+     */
     public FirstNightController(Game game) {
         this.game = game;
         this.players = game.getPlayers();
         firstNightHandlers = new LinkedList<>();
     }
 
+    /**
+     * Start first night.
+     */
     public void startFirstNight() {
 
         sendMessageToAll(Color.CYAN + "\n....................................................................\n" + Color.RESET);
@@ -32,6 +45,11 @@ public class FirstNightController {
         waitForExit();
     }
 
+    /**
+     * Send message to all.
+     *
+     * @param message the message
+     */
     public void sendMessageToAll(String message) {
         for (Player player : players) {
             try {
@@ -43,12 +61,22 @@ public class FirstNightController {
         }
     }
 
+    /**
+     * wait to the first night end
+     */
+
     private void waitForExit() {
         while (true) {
             if (isDone())
                 break;
         }
     }
+
+    /**
+     * checks that first night end
+     *
+     * @return true if it is done
+     */
 
     private boolean isDone() {
         for (FirstNightHandler fnh : firstNightHandlers) {

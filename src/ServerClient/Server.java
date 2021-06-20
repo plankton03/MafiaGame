@@ -6,9 +6,19 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Scanner;
 
+/**
+ * The type Server.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class Server {
 
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
 
         Server server = new Server();
@@ -24,15 +34,6 @@ public class Server {
 
             game.startFirstNight();
 
-//            try {
-//                Thread.sleep(5 * 1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//
-//
             while (true) {
 
                 game.startDay();
@@ -40,7 +41,6 @@ public class Server {
                 game.startVoting();
                 if (game.gameIsOver())
                     break;
-//
                 game.startNight();
                 if (game.gameIsOver())
                     break;
@@ -49,9 +49,8 @@ public class Server {
             Thread.sleep(5 * 1000);
 
             game.announcingTheWinner();
-//
+
             game.sendToAll("Exit");
-//
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,6 +61,11 @@ public class Server {
     }
 
 
+    /**
+     * Gets num of players.
+     *
+     * @return the num of players
+     */
     public static int getNumOfPlayers() {
 
         System.out.println("Please enter the number of the players ...\n(Preferred more than 8)");

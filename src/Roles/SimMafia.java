@@ -1,7 +1,15 @@
 package Roles;
 
-public class SimMafia extends SimRoles{
+/**
+ * The type Sim mafia.
+ *
+ * @author : Fatemeh Abdi
+ */
+public class SimMafia extends SimRoles {
 
+    /**
+     * Instantiates a new Sim mafia.
+     */
     public SimMafia() {
         super("Simple Mafia");
     }

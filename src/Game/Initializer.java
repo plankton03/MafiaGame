@@ -9,6 +9,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Vector;
 
+/**
+ * The type Initializer.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class Initializer {
     private ServerSocket serverSocket;
     private int numOfPlayers;
@@ -16,12 +21,24 @@ public class Initializer {
     private Vector<String> names = new Vector<>();
 
 
+    /**
+     * Instantiates a new Initializer.
+     *
+     * @param serverSocket the server socket
+     * @param numOfPlayers the num of players
+     * @param game         the game
+     */
     public Initializer(ServerSocket serverSocket, int numOfPlayers, Game game) {
         this.serverSocket = serverSocket;
         this.numOfPlayers = numOfPlayers;
         this.game = game;
     }
 
+    /**
+     * Initialize.
+     *
+     * @throws IOException the io exception
+     */
     public void initialize() throws IOException {
 
         LinkedList<Role> roles = createRoles();
@@ -42,6 +59,11 @@ public class Initializer {
     }
 
 
+    /**
+     * Create roles linked list.
+     *
+     * @return the linked list
+     */
     public LinkedList<Role> createRoles() {
         LinkedList<Role> roles = new LinkedList<>();
         for (int i = 1; i <= numOfPlayers; i++) {
@@ -77,37 +99,69 @@ public class Initializer {
         return roles;
     }
 
+    /**
+     * Create players linked list.
+     *
+     * @return the linked list
+     * @throws IOException the io exception
+     */
     public LinkedList<Player> createPlayers() throws IOException {
 
         LinkedList<Player> players = new LinkedList<Player>();
         for (int i = 1; i <= numOfPlayers; i++) {
             players.add(new Player(serverSocket.accept(), game));
             System.out.println("Player " + i + " connected ");
-            players.get(players.size()-1).getWriter().writeUTF("You are connected to the game server :)");
+            players.get(players.size() - 1).getWriter().writeUTF("You are connected to the game server :)");
         }
         return players;
     }
 
+    /**
+     * Add new name.
+     *
+     * @param name the name
+     */
     public void addNewName(String name) {
         names.add(name);
     }
 
+    /**
+     * Gets names.
+     *
+     * @return the names
+     */
     public Vector<String> getNames() {
         return names;
     }
 
+    /**
+     * Match player role.
+     *
+     * @param players the players
+     * @param roles   the roles
+     */
     public void matchPlayerRole(LinkedList<Player> players, LinkedList<Role> roles) {
         for (int i = 0; i < numOfPlayers; i++) {
             players.get(i).setRole(roles.get(i));
         }
     }
 
+    /**
+     * Run players.
+     *
+     * @param players the players
+     */
     public void runPlayers(LinkedList<Player> players) {
         for (Player player : players) {
             new Thread(player).start();
         }
     }
 
+    /**
+     * Update game state.
+     *
+     * @param players the players
+     */
     public void updateGameState(LinkedList<Player> players) {
         game.setPlayers(players);
     }

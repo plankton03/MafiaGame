@@ -4,6 +4,11 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * The type Client.
+ *
+ * @author : Fatemeh Abdi
+ */
 public class Client implements Runnable {
     private Socket socket;
     private DataInputStream reader;
@@ -12,11 +17,20 @@ public class Client implements Runnable {
     private boolean exit = false;
 
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     * @throws IOException the io exception
+     */
     public static void main(String[] args) throws IOException {
         Client client = new Client();
         client.doSome();
     }
 
+    /**
+     * Do some.
+     */
     public void doSome() {
         try {
             create();
@@ -60,6 +74,11 @@ public class Client implements Runnable {
     }
 
 
+    /**
+     * Listening.
+     *
+     * @throws IOException the io exception
+     */
     public void listening() throws IOException {
         while (true) {
             String rec = reader.readUTF();
@@ -75,7 +94,10 @@ public class Client implements Runnable {
         }
     }
 
-    public void startMessaging()  {
+    /**
+     * Start messaging.
+     */
+    public void startMessaging() {
         String message;
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -83,7 +105,7 @@ public class Client implements Runnable {
                 break;
             message = scanner.nextLine();
             if (message != null) {
-                if (message.equals("exit")){
+                if (message.equals("exit")) {
                     try {
                         writer.close();
                         reader.close();
