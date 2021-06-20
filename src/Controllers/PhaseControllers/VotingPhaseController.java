@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VotingPhaseController {
 
 
-    private int voteTime = 5;
+    private int voteTime = 10;
     private Game game;
     private LinkedList<Player> players;
     private LinkedList<Player> deadPlayers;
@@ -79,7 +79,22 @@ public class VotingPhaseController {
             announcementOfVotingResults();
         }
         reportResult();
+        removeInactive();
 
+    }
+
+    public void removeInactive() {
+        for (Player player : players) {
+            if (player.getInactive() == 3) {
+                try {
+                    sendMessageToAll(Color.CYAN_BOLD_BRIGHT + player.getName() + " dead ... Due to inactivity :(" + Color.RESET);
+                    players.remove(player);
+                    (new ExitHandler(player, game)).start();
+                } catch (ConcurrentModificationException c) {
+
+                }
+            }
+        }
     }
 
     public void reportResult() {

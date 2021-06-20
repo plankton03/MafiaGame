@@ -5,6 +5,7 @@ import Design.Color;
 import Player.Player;
 
 import java.io.IOException;
+import java.util.ConcurrentModificationException;
 
 public abstract class MainRoles implements Role {
     protected int answer;
@@ -51,16 +52,25 @@ public abstract class MainRoles implements Role {
 
     public int getAnswer(Player thePlayer, int sRange, int eRange) throws IOException {
         while (true) {
-            String ans = thePlayer.getReader().readUTF();
-            if (isInteger(ans)) {
-                answer = Integer.parseInt(ans);
-                if (isValidAnswer(answer, sRange, eRange)) {
-                    return answer;
+            try {
+                String ans = thePlayer.getReader().readUTF();
+                if (isInteger(ans)) {
+                    answer = Integer.parseInt(ans);
+                    if (isValidAnswer(answer, sRange, eRange)) {
+                        thePlayer.getWriter().writeUTF(Color.CYAN_UNDERLINED + "Your answer was received." + Color.RESET);
+                        return answer;
+                    } else {
+                        thePlayer.getWriter().writeUTF(Color.PURPLE_UNDERLINED +
+                                "The input entered is invalid :( Please try again ..." + Color.RESET);
+                    }
+                } else {
+                    thePlayer.getWriter().writeUTF(Color.PURPLE_UNDERLINED +
+                            "The input entered is invalid :( Please try again ..." + Color.RESET);
                 }
-            } else
-                thePlayer.getWriter().writeUTF(Color.PURPLE_UNDERLINED +
-                        "The input entered is invalid :( Please try again ..."+Color.RESET);
+
+            }catch (IOException e){
+                System.out.println(thePlayer.getName()+" can't answer.");
+            }
         }
     }
-
 }

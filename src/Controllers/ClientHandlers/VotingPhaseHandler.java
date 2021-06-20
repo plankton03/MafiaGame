@@ -16,6 +16,7 @@ public class VotingPhaseHandler extends Thread {
     private int answer = 0;
     private boolean end = false;
     private long chatTime = 10 * 1000;
+    private boolean hasActivity = false;
 
 
     public VotingPhaseHandler(VotingPhaseController controller, Player thePlayer) {
@@ -32,7 +33,6 @@ public class VotingPhaseHandler extends Thread {
 
         String rcv;
 //
-        boolean flag = false;
         try {
             thePlayer.getWriter().writeUTF(playersListToVote());
 
@@ -40,32 +40,6 @@ public class VotingPhaseHandler extends Thread {
 
         }
 
-//        long start = System.currentTimeMillis();
-//        long end = start + chatTime;
-//        while (System.currentTimeMillis() < end) {
-//            gettingAnswer();
-//        }
-//        while ()
-//        gettingAnswer();
-
-//        while (true){
-//            gettingAnswer();
-//
-//            if (end)
-//                break;
-//        }
-
-//        int i = 0;
-//        while (i < 3) {
-//            gettingAnswer();
-//            i++;
-//            if (end)
-//            {
-//                System.out.println("in loop");
-//                break;
-//
-//            }
-//        }
 
         while (true){
             gettingAnswer();
@@ -75,6 +49,12 @@ public class VotingPhaseHandler extends Thread {
         }
 
         matchAnswer(+1);
+
+        if (hasActivity == false){
+            thePlayer.setInactive(thePlayer.getInactive()+1);
+        }else {
+            thePlayer.setInactive(0);
+        }
     }
 
     public Player getThePlayer() {
@@ -82,18 +62,23 @@ public class VotingPhaseHandler extends Thread {
     }
 
     public synchronized void gettingAnswer() {
-
         while (true) {
             try {
                 String ans = thePlayer.getReader().readUTF();
                 if (end)
                     return;
+                hasActivity = true;
                 if (isInteger(ans)) {
                     if (isValidAnswer(Integer.parseInt(ans))) {
                         this.answer = Integer.parseInt(ans);
                         thePlayer.getWriter().writeUTF(Color.CYAN_UNDERLINED + "If you wish, you can vote another." +
                                 Color.RESET);
                         break;
+                    }
+                    else {
+                        thePlayer.getWriter().writeUTF(Color.CYAN + "The answer you entered is not a" +
+                                " valid answer" +
+                                ":( Please try again." + Color.RESET);
                     }
                 }else {
                     thePlayer.getWriter().writeUTF(Color.CYAN + "The answer you entered is not a" +
